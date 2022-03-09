@@ -8,6 +8,7 @@ Cameron Smyrl
 Matt Curtin
 Kalvin Garcia
 Logan Wheeler
+
 Sometimes 2 people need to meet halfway (more or less) between where they are.  
 Common examples are custody exchanges or trying to meet a relative/friend who is 
 passing through on a trip.  It should have features like noting any favorites, suggesting 
