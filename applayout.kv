@@ -1,0 +1,161 @@
+#:import utils kivy.utils
+
+#colors for app elements
+#text font colors
+#:set soft_black '#333333' #for sky_blue, aqua_blue, mint_green, peach_pink, egg_back
+#:set harsh_black: '#0F0F0F' #for apple_red
+#:set not_white '#EBEBEB' #for forest_green, night_blue, apple_red, thick_ice, black_back
+#:set off_white '#FCFCFC' #for dark_peach
+
+#colors for visual elements for app
+#:set apple_red '#F5345C' #can be used in both themes
+
+#:set mint_green '#B2EB9C' #not for light mode
+#:set peach_pink '#E0AF9D' #not for light mode
+#:set aqua_blue '#4ED2DB' #not for light mode
+#:set sky_blue '#51A6F5' #not for light mode
+
+#:set dark_peach '#D1797B' #not for dark mode (but can be used)
+#:set night_blue '#366EA3' #not for dark mode
+#:set forest_green '#1D7850' #not for dark mode
+#:set thick_ice '0C6399' #not for dark mode
+
+#app beckground colors
+#:set black_back '#0D0D0D' #for dark mode background
+#:set egg_back '#F2F2F2' #for light mode background
+
+Manager:
+    TitleScreen:
+    LoginScreen:
+    RegisterScreen:
+    HomeScreen:
+    MeetingInfoScreen:
+    CreateMeetingScreen:
+    SettingsScreen:
+    CalenderScreen:
+    ConfirmRequestScreen:
+    ExploreScreen:
+
+<BoxLayout>
+    orientation: "vertical"
+    size: root.width, root.height
+
+    padding: 50
+    spacing: 20
+<Button>
+    background_normal: ''
+    background_color: utils.get_color_from_hex(sky_blue)
+<Label>
+    #background_color: utils.get_color_from_hex(egg_back)
+    canvas.before:
+        Color:
+            rgba: utils.get_color_from_hex(egg_back)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    color: utils.get_color_from_hex(soft_black)
+
+<TitleScreen>
+    name: "title"
+
+    canvas.before:
+        Color:
+            rgba: utils.get_color_from_hex(egg_back)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    BoxLayout:
+        Label: #will become an image once I make the logo
+            text: 'M'
+            font_size: 50
+            pos_hint: {'center_x': .5}
+            size_hint: (.4, .4)
+            #background_color: utils.get_color_from_hex(black_back)
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(black_back)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            color: utils.get_color_from_hex(not_white)
+            bold: True
+        Label:
+            text: "Meet in the Middle"
+            font_size: 50
+            pos_hint: {'center_x': .5}
+            size_hint: (1, .8)
+        #animation goes here, but image for now
+        Image:
+            id: animation
+            source: 'images/test_image1.png'
+        Label:
+            id: accredation
+            text: "App by TeamRocket"
+            font_size: 16
+            pos_hint: {'center_x': 0.5}
+            size_hint: (.2, .2)
+
+        Button: #temp while i figure out touch events
+            text: "login screen"
+            on_press: app.root.current = "login"
+
+    #on_touch_down: app.root.current = "login"
+
+<LoginScreen>
+    name: "login"
+
+    canvas.before:
+        Color:
+            rgba: utils.get_color_from_hex(egg_back)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    BoxLayout:
+        Label: #will become an image once I make the logo
+            text: 'M'
+            font_size: 32
+            pos_hint: {'center_x': .5}
+            size_hint: (.2, .2)
+            #background_color: utils.get_color_from_hex(black_back)
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(black_back)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            color: utils.get_color_from_hex(not_white)
+            bold: True
+        Label:
+            id: app_title
+            text: "Meet in the Middle"
+            font_size: 32
+            pos_hint: {'center_x': .5}
+            size_hint: (1, .5)
+        #animation goes here, but image for now
+        GridLayout:
+            cols: 2
+        Label:
+            id: accredation
+            text: "App by TeamRocket"
+            font_size: 16
+            pos_hint: {'center_x': 0.5}
+            size_hint: (.2, .2)
+
+<RegisterScreen>
+    name: "register"
+<HomeScreen>
+    name: "home"
+<MeetingInfoScreen>
+    name: "meeting_info"
+<CreateMeetingScreen>
+    name: "create_meeting"
+<SettingsScreen>
+    name: "settings"
+<CalenderScreen>
+    name: "calender"
+<ConfirmRequestScreen>
+    name: "confirm_request"
+<ExploreScreen>
+    name: "explore"
