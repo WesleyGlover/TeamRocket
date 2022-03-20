@@ -44,7 +44,9 @@ Manager:
     spacing: 20
 <Button>
     background_normal: ''
-    background_color: utils.get_color_from_hex(sky_blue)
+    background_color: utils.get_color_from_hex(night_blue)
+    color: utils.get_color_from_hex(not_white)
+
 <Label>
     #background_color: utils.get_color_from_hex(egg_back)
     canvas.before:
@@ -53,17 +55,16 @@ Manager:
         Rectangle:
             size: self.size
             pos: self.pos
-    color: utils.get_color_from_hex(soft_black)
-
-<TitleScreen>
-    name: "title"
-
+<Screen>
     canvas.before:
         Color:
             rgba: utils.get_color_from_hex(egg_back)
         Rectangle:
             size: self.size
             pos: self.pos
+
+<TitleScreen>
+    name: "title"
 
     BoxLayout:
         Label: #will become an image once I make the logo
@@ -83,6 +84,7 @@ Manager:
         Label:
             text: "Meet in the Middle"
             font_size: 50
+            color: utils.get_color_from_hex(soft_black)
             pos_hint: {'center_x': .5}
             size_hint: (1, .8)
         #animation goes here, but image for now
@@ -92,25 +94,22 @@ Manager:
         Label:
             id: accredation
             text: "App by TeamRocket"
+            color: utils.get_color_from_hex(soft_black)
             font_size: 16
             pos_hint: {'center_x': 0.5}
             size_hint: (.2, .2)
 
         Button: #temp while i figure out touch events
             text: "login screen"
+            font_size: 16
+            pos_hint: {'center_x': .5}
+            size_hint: (.3, .1)
             on_press: app.root.current = "login"
 
     #on_touch_down: app.root.current = "login"
 
 <LoginScreen>
     name: "login"
-
-    canvas.before:
-        Color:
-            rgba: utils.get_color_from_hex(egg_back)
-        Rectangle:
-            size: self.size
-            pos: self.pos
 
     BoxLayout:
         Label: #will become an image once I make the logo
@@ -130,32 +129,336 @@ Manager:
         Label:
             id: app_title
             text: "Meet in the Middle"
+            color: utils.get_color_from_hex(soft_black)
             font_size: 32
             pos_hint: {'center_x': .5}
             size_hint: (1, .5)
         #animation goes here, but image for now
-        GridLayout:
-            cols: 2
-        Label:
-            id: accredation
-            text: "App by TeamRocket"
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(dark_peach)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: "Username"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: username_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: "Username"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: password_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Button:
+                background_color: utils.get_color_from_hex(dark_peach)
+                text: "Forgot Your Password?"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 12
+                pos_hint: {'center_x': .5, 'center_y': .2}
+                size_hint: (.4, .1)
+                #on_press: #nothing for now
+            Button:
+                text: "Login"
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.5, .2)
+                on_press: app.root.current = "home" #should do validation though
+        Button: #temp while i figure out touch events
+            text: "Register"
             font_size: 16
-            pos_hint: {'center_x': 0.5}
-            size_hint: (.2, .2)
+            pos_hint: {'center_x': .5}
+            size_hint: (.3, .1)
+            on_press: app.root.current = "register"
 
 <RegisterScreen>
     name: "register"
+
+    BoxLayout:
+        Label: #will become an image once I make the logo
+            text: 'M'
+            font_size: 32
+            pos_hint: {'center_x': .5}
+            size_hint: (.2, .2)
+            #background_color: utils.get_color_from_hex(black_back)
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(black_back)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            color: utils.get_color_from_hex(not_white)
+            bold: True
+        Label:
+            id: app_title
+            text: "Meet in the Middle"
+            color: utils.get_color_from_hex(soft_black)
+            font_size: 32
+            pos_hint: {'center_x': .5}
+            size_hint: (1, .5)
+        #animation goes here, but image for now
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(dark_peach)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: "Username"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: username_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: "Username"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: password_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Button:
+                text: "Register"
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.5, .2)
+
 <HomeScreen>
     name: "home"
+
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            cols: 3
+            size_hint: (1, .2)
+
+            Button:
+                text: "S"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.2, .2)
+            Label:
+                text: "Home"
+                color: utils.get_color_from_hex(soft_black)
+                font_size: 50
+            Button:
+                text: "i"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.2, .2)
+        BoxLayout:
+            Image: #a map will go here
+                id: current_loc_map
+                source: 'images/mexico_map.jpg'
+            BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            Button:
+                text: "Create A Meeting"
+                font_size: 14
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.5, .2)
+        GridLayout:
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(thick_ice)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            cols: 3
+            size_hint: (1, .2)
+
+            Button:
+                text: "H"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+            Button:
+                text: "C"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+            Button:
+                text: "E"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
 <MeetingInfoScreen>
     name: "meeting_info"
+
+    GridLayout:
+        cols: 1
+
+        Label:
+        BoxLayout:
+            Image:
+            Label:
+            Button:
+        GridLayout:
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(thick_ice)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            cols: 3
+            Button:
+            Button:
+            Button:
+
 <CreateMeetingScreen>
     name: "create_meeting"
+
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            cols: 2
+            Button:
+            Label:
+        BoxLayout:
+            Image:
+            GridLayout:
+            GridLayout:
+            Button:
+
 <SettingsScreen>
     name: "settings"
+
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            cols: 2
+            Button:
+            Label:
+        BoxLayout:
+            BoxLayout:
+                Button:
+                Button:
+                Button:
+                Button:
+                Button:
 <CalenderScreen>
     name: "calender"
+
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            cols: 2
+            Label:
+            Button:
+        BoxLayout:
+            GridLayout:
+                cols: 7
+                rows: 5
+            BoxLayout:
+        GridLayout:
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(thick_ice)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            cols: 3
+            Button:
+            Button:
+            Button:
+
 <ConfirmRequestScreen>
     name: "confirm_request"
+
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            cols: 2
+            Button:
+            Label:
+        BoxLayout:
+            Image:
+            GridLayout:
+            GridLayout:
+            Button:
+
 <ExploreScreen>
     name: "explore"
+
+    GridLayout:
+        cols: 1
+
+        Label:
+        BoxLayout:
+            Label:
+            TextInput:
+            Label:
+            BoxLayout:
+        GridLayout:
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(thick_ice)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            cols: 3
+            Button:
+            Button:
+            Button:
