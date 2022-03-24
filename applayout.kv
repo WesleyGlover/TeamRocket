@@ -167,7 +167,7 @@ Manager:
                     Rectangle:
                         size: self.size
                         pos: self.pos
-                text: "Username"
+                text: "Password"
                 color: utils.get_color_from_hex(off_white)
                 font_size: 20
                 pos_hint: {'center_x': .5, 'center_y': .7}
@@ -233,6 +233,7 @@ Manager:
                     size: self.size
                     pos: self.pos
 
+
             Label:
                 canvas.before:
                     Color:
@@ -240,13 +241,13 @@ Manager:
                     Rectangle:
                         size: self.size
                         pos: self.pos
-                text: "Username"
+                text: "Name"
                 color: utils.get_color_from_hex(off_white)
                 font_size: 20
                 pos_hint: {'center_x': .5, 'center_y': .7}
                 size_hint: (.7, .2)
             TextInput:
-                id: username_input
+                id: register_name_input
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
@@ -264,7 +265,43 @@ Manager:
                 pos_hint: {'center_x': .5, 'center_y': .7}
                 size_hint: (.7, .2)
             TextInput:
-                id: password_input
+                id: register_username_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: "Password"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: register_password_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: "Password"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: register_repassword_input
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
@@ -274,6 +311,9 @@ Manager:
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.5, .2)
+
+                #there should be validation and stuff, but for now we just go to the home screen
+                on_press: app.root.current = "home"
 
 <HomeScreen>
     name: "home"
@@ -289,6 +329,8 @@ Manager:
                 text: "S"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint: (.2, .2)
+
+                on_press: app.root.current = "settings"
             Label:
                 text: "Home"
                 color: utils.get_color_from_hex(soft_black)
@@ -297,6 +339,8 @@ Manager:
                 text: "i"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint: (.2, .2)
+
+                #on_press: #pop up
         BoxLayout:
             Image: #a map will go here
                 id: current_loc_map
@@ -328,14 +372,20 @@ Manager:
                 text: "H"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint: (.1, .1)
+
+                disabled: True
             Button:
                 text: "C"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint: (.1, .1)
+
+                on_press: app.root.current = "calender"
             Button:
                 text: "E"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint: (.1, .1)
+
+                on_press: app.root.current = "explore"
 
 <MeetingInfoScreen>
     name: "meeting_info"
@@ -344,21 +394,12 @@ Manager:
         cols: 1
 
         Label:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint: (1, .2)
         BoxLayout:
-            Image:
+            Image: #goddamn maps again
+                source: 'images/mexico_map.jpg'
             Label:
-            Button:
-        GridLayout:
-            canvas.before:
-                Color:
-                    rgba: utils.get_color_from_hex(thick_ice)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-
-            cols: 3
-            Button:
-            Button:
             Button:
 
 <CreateMeetingScreen>
@@ -369,10 +410,13 @@ Manager:
 
         GridLayout:
             cols: 2
+            size_hint: (1, .2)
+
             Button:
             Label:
         BoxLayout:
-            Image:
+            Image: #map again
+                source: 'images/mexico_map.jpg'
             GridLayout:
             GridLayout:
             Button:
@@ -384,9 +428,16 @@ Manager:
         cols: 1
 
         GridLayout:
+            size_hint: (1, .2)
+
             cols: 2
             Button:
+                text: "<<"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                on_press: app.root.current = "home"
             Label:
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         BoxLayout:
             BoxLayout:
                 Button:
@@ -402,12 +453,19 @@ Manager:
 
         GridLayout:
             cols: 2
+            size_hint: (1, .2)
+
             Label:
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             Button:
+                text: "R"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         BoxLayout:
-            GridLayout:
-                cols: 7
-                rows: 5
+            # GridLayout:
+            #     cols: 7
+            #     rows: 5
+            Image: #calender
+                source: 'images/calender.png'
             BoxLayout:
         GridLayout:
             canvas.before:
@@ -418,9 +476,26 @@ Manager:
                     pos: self.pos
 
             cols: 3
+            size_hint: (1, .2)
+
             Button:
+                text: "H"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                on_press: app.root.current = "home"
             Button:
+                text: "C"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                disabled: True
             Button:
+                text: "E"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                on_press: app.root.current = "explore"
 
 <ConfirmRequestScreen>
     name: "confirm_request"
@@ -445,6 +520,8 @@ Manager:
         cols: 1
 
         Label:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint: (1, .2)
         BoxLayout:
             Label:
             TextInput:
@@ -459,6 +536,23 @@ Manager:
                     pos: self.pos
 
             cols: 3
+            size_hint: (1, .2)
+
             Button:
+                text: "H"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                on_press: app.root.current = "home"
             Button:
+                text: "C"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                on_press: app.root.current = "calender"
             Button:
+                text: "E"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                disabled: True
