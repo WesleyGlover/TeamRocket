@@ -1,5 +1,5 @@
 import kivy.utils as utils;
-from kivymd.app import MDApp;
+from kivy.app import App;
 from kivy.lang import Builder;
 from kivy.uix.screenmanager import ScreenManager, Screen;
 from kivy.properties import ObjectProperty;
@@ -67,7 +67,7 @@ Window.size = (900/2, 1600/2);
 #grab the design document
 kv = Builder.load_file('applayout.kv');
 
-class Meet_in_the_MiddleApp(MDApp):
+class Meet_in_the_MiddleApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs);
 
