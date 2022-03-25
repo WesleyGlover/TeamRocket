@@ -1,4 +1,6 @@
 #:import utils kivy.utils
+#:import MapView kivy.garden.mapview.MapView
+#:import Factory kivy.factory.Factory
 
 #colors for app elements
 #text font colors
@@ -18,7 +20,7 @@
 #:set dark_peach '#D1797B' #not for dark mode (but can be used)
 #:set night_blue '#366EA3' #not for dark mode
 #:set forest_green '#1D7850' #not for dark mode
-#:set thick_ice '0C6399' #not for dark mode
+#:set thick_ice '#0C6399' #not for dark mode
 
 #app beckground colors
 #:set black_back '#0D0D0D' #for dark mode background
@@ -44,24 +46,15 @@ Manager:
     spacing: 20
 <Button>
     background_normal: ''
-    background_color: utils.get_color_from_hex(night_blue)
+    background_color: utils.get_color_from_hex(night_blue) #if app.mode == 'light' else utils.get_color_from_hex(night_blue)
     color: utils.get_color_from_hex(not_white)
+<AppInfoPopup@Popup>
+    auto_dismiss: True
+    title: "How to use the app:"
+    size_hint: (.8, .8)
 
-<Label>
-    #background_color: utils.get_color_from_hex(egg_back)
-    canvas.before:
-        Color:
-            rgba: utils.get_color_from_hex(egg_back)
-        Rectangle:
-            size: self.size
-            pos: self.pos
-<Screen>
-    canvas.before:
-        Color:
-            rgba: utils.get_color_from_hex(egg_back)
-        Rectangle:
-            size: self.size
-            pos: self.pos
+    Label:
+        text: "This is how the app works"
 
 <TitleScreen>
     name: "title"
@@ -88,9 +81,12 @@ Manager:
             pos_hint: {'center_x': .5}
             size_hint: (1, .8)
         #animation goes here, but image for now
-        Image:
-            id: animation
-            source: 'images/test_image1.png'
+        # Image:
+        #     id: animation
+        #     source: 'images/test_image1.png
+        Label:
+            id: animate_me
+            size: 0, 20
         Label:
             id: accredation
             text: "App by TeamRocket"
@@ -198,6 +194,12 @@ Manager:
             pos_hint: {'center_x': .5}
             size_hint: (.3, .1)
             on_press: app.root.current = "register"
+    #upon opening the app for the first time
+    # Popup:
+    #     auto_dismiss: True
+    #     title: "How to use the app:"
+    #     size_hint: (.8, .8)
+    #     pos_hint: {"center_x": .5, "center_y": .5}
 
 <RegisterScreen>
     name: "register"
@@ -340,12 +342,18 @@ Manager:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint: (.2, .2)
 
-                #on_press: #pop up
+                on_press: Factory.AppInfoPopup().open() #pop up
+        MapView:
+            id: home_map
+            lat: 33.218850
+            lon: -97.146090
+            zoom: 10
         BoxLayout:
-            Image: #a map will go here
-                id: current_loc_map
-                source: 'images/mexico_map.jpg'
+            # Image: #a map will go here
+            #     id: current_loc_map
+            #     source: 'images/mexico_map.jpg'
             BoxLayout:
+                id: upcoming_meeting_content
                 canvas.before:
                     Color:
                         rgba: utils.get_color_from_hex(dark_peach)
@@ -357,6 +365,8 @@ Manager:
                 font_size: 14
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint: (.5, .2)
+
+                on_press: app.root.current = 'create_meeting'
         GridLayout:
             canvas.before:
                 Color:
@@ -413,13 +423,26 @@ Manager:
             size_hint: (1, .2)
 
             Button:
+                on_press: app.root.current = 'home'
             Label:
+        MapView:
+            id: create_meeting_map
+            lat: 33.218850
+            lon: -97.146090
+            zoom: 10
         BoxLayout:
-            Image: #map again
-                source: 'images/mexico_map.jpg'
+            # Image: #map again
+            #     source: 'images/mexico_map.jpg'
             GridLayout:
-            GridLayout:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
             Button:
+                text: "Location Info"
+                #on_press: #open the information for the location as a pop up
 
 <SettingsScreen>
     name: "settings"
@@ -460,6 +483,7 @@ Manager:
             Button:
                 text: "R"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                #on_press: #open request pop-up
         BoxLayout:
             # GridLayout:
             #     cols: 7
@@ -467,6 +491,12 @@ Manager:
             Image: #calender
                 source: 'images/calender.png'
             BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
         GridLayout:
             canvas.before:
                 Color:
@@ -507,11 +537,31 @@ Manager:
             cols: 2
             Button:
             Label:
+        MapView:
+            id: confirm_request_map
+            lat: 33.218850
+            lon: -97.146090
+            zoom: 10
         BoxLayout:
-            Image:
+            # Image: #map, image for now
+            #     source: "images/mexico_map.jpg"
             GridLayout:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
             GridLayout:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
             Button:
+                text: "Confirm Meeting Information"
+                #on_press: #send the information to the server to create the meeting
 
 <ExploreScreen>
     name: "explore"
@@ -520,13 +570,29 @@ Manager:
         cols: 1
 
         Label:
+            text: "Explore"
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             size_hint: (1, .2)
+        MapView:
+            id: explore_map
+            lat: 33.218850
+            lon: -97.146090
+            zoom: 10
         BoxLayout:
             Label:
+                text: "Search"
             TextInput:
+                id: search_content
             Label:
+                text: "List of Locations"
             BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            #list of locations, which can be clicked on and make a pop-up
         GridLayout:
             canvas.before:
                 Color:
