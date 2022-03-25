@@ -1,6 +1,8 @@
 #:import utils kivy.utils
 #:import MapView kivy.garden.mapview.MapView
 #:import Factory kivy.factory.Factory
+#:import calendar_ui KivyCalendar
+#:import CalendarWidget KivyCalendar
 
 #colors for app elements
 #text font colors
@@ -42,12 +44,22 @@ Manager:
     orientation: "vertical"
     size: root.width, root.height
 
-    padding: 50
-    spacing: 20
+    padding: 30
+    spacing: 10
 <Button>
     background_normal: ''
     background_color: utils.get_color_from_hex(night_blue) #if app.mode == 'light' else utils.get_color_from_hex(night_blue)
     color: utils.get_color_from_hex(not_white)
+
+#defaults for the stupid calender
+<MonthYearLabel>
+    color: utils.get_color_from_hex(soft_black)
+    font_size: 30
+<DayAbbrLabel>
+    color: utils.get_color_from_hex(soft_black)
+<DayAbbrWeekendLabel>
+    color: utils.get_color_from_hex(dark_peach)
+
 <AppInfoPopup@Popup>
     auto_dismiss: True
     title: "How to use the app:"
@@ -55,6 +67,14 @@ Manager:
 
     Label:
         text: "This is how the app works"
+<RequestsPopup@Popup>
+    auto_dismiss: True
+    title: "Requests:"
+    size_hint: (.4, .4)
+    pos_hint: {'center_x': .8, 'center_y': .8}
+
+    Label:
+        text: "Requests go here"
 
 <TitleScreen>
     name: "title"
@@ -194,12 +214,6 @@ Manager:
             pos_hint: {'center_x': .5}
             size_hint: (.3, .1)
             on_press: app.root.current = "register"
-    #upon opening the app for the first time
-    # Popup:
-    #     auto_dismiss: True
-    #     title: "How to use the app:"
-    #     size_hint: (.8, .8)
-    #     pos_hint: {"center_x": .5, "center_y": .5}
 
 <RegisterScreen>
     name: "register"
@@ -297,7 +311,7 @@ Manager:
                     Rectangle:
                         size: self.size
                         pos: self.pos
-                text: "Password"
+                text: "Re-enter Password"
                 color: utils.get_color_from_hex(off_white)
                 font_size: 20
                 pos_hint: {'center_x': .5, 'center_y': .7}
@@ -343,29 +357,40 @@ Manager:
                 size_hint: (.2, .2)
 
                 on_press: Factory.AppInfoPopup().open() #pop up
-        MapView:
+        MapView: #this map will show the user their current location
             id: home_map
             lat: 33.218850
             lon: -97.146090
             zoom: 10
         BoxLayout:
-            # Image: #a map will go here
-            #     id: current_loc_map
-            #     source: 'images/mexico_map.jpg'
             BoxLayout:
                 id: upcoming_meeting_content
+                padding: 10
                 canvas.before:
                     Color:
                         rgba: utils.get_color_from_hex(dark_peach)
                     Rectangle:
                         size: self.size
                         pos: self.pos
+                Label:
+                    text: "Upcoming Meetings"
+                    size_hint: (1, .2)
+                ScrollView:
+                    id: upcoming_meetings
+                    canvas.before:
+                        Color:
+                            rgba: utils.get_color_from_hex(peach_pink)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
             Button:
                 text: "Create A Meeting"
                 font_size: 14
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint: (.5, .2)
 
+                #this button should call a function not just go to the create meeting page
                 on_press: app.root.current = 'create_meeting'
         GridLayout:
             canvas.before:
@@ -406,9 +431,12 @@ Manager:
         Label:
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             size_hint: (1, .2)
+        MapView: #this map will show the meeting location
+            id: meeting_info_map
+            lat: 33.218850
+            lon: -97.146090
+            zoom: 10
         BoxLayout:
-            Image: #goddamn maps again
-                source: 'images/mexico_map.jpg'
             Label:
             Button:
 
@@ -419,13 +447,20 @@ Manager:
         cols: 1
 
         GridLayout:
-            cols: 2
+            cols: 3
             size_hint: (1, .2)
 
             Button:
+                text: "<<"
                 on_press: app.root.current = 'home'
+                size_hint: (.2, 1)
             Label:
-        MapView:
+                text: "Create a Meeting"
+                font_size: 30
+                color: utils.get_color_from_hex(soft_black)
+            Label:
+                size_hint: (.2, 1)
+        MapView: #this map will show the possible locations based on the criteria layed out
             id: create_meeting_map
             lat: 33.218850
             lon: -97.146090
@@ -433,15 +468,46 @@ Manager:
         BoxLayout:
             # Image: #map again
             #     source: 'images/mexico_map.jpg'
+
             GridLayout:
+                cols: 2
                 canvas.before:
                     Color:
                         rgba: utils.get_color_from_hex(dark_peach)
                     Rectangle:
                         size: self.size
                         pos: self.pos
+
+                Label:
+                    text: "Cofee Shops"
+                CheckBox:
+                    id: coffee_check
+                Label:
+                    text: "Libraries"
+                CheckBox:
+                    id: library_check
+                Label:
+                    text: "Banks"
+                CheckBox:
+                    id: banks_check
+                Label:
+                    text: "Police Stations"
+                CheckBox:
+                    id: police_check
+                Label:
+                    text: "Fire Departments"
+                CheckBox:
+                    id: fire_check
+                Label:
+                    text: "Gas Stations"
+                CheckBox:
+                    id: gas_check
+
+
             Button:
                 text: "Location Info"
+                size_hint: (.6, .3)
+                pos_hint: {"center_x": .5}
                 #on_press: #open the information for the location as a pop up
 
 <SettingsScreen>
@@ -453,21 +519,19 @@ Manager:
         GridLayout:
             size_hint: (1, .2)
 
-            cols: 2
+            cols: 3
             Button:
                 text: "<<"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.2, 1)
 
                 on_press: app.root.current = "home"
             Label:
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                text: "Settings"
+                font_size: 40
+                color: utils.get_color_from_hex(soft_black)
+            Label:
+                size_hint: (.2, 1)
         BoxLayout:
-            BoxLayout:
-                Button:
-                Button:
-                Button:
-                Button:
-                Button:
 <CalenderScreen>
     name: "calender"
 
@@ -475,21 +539,22 @@ Manager:
         cols: 1
 
         GridLayout:
-            cols: 2
+            cols: 3
             size_hint: (1, .2)
 
             Label:
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.2, 1)
+            Label:
+                text: "Calender"
+                font_size: 40
+                color: utils.get_color_from_hex(soft_black)
             Button:
                 text: "R"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                #on_press: #open request pop-up
+                size_hint: (.2, 1)
+
+                on_press: Factory.RequestsPopup().open() #open request pop-up
+        CalendarWidget: #no options for this because it's weird
         BoxLayout:
-            # GridLayout:
-            #     cols: 7
-            #     rows: 5
-            Image: #calender
-                source: 'images/calender.png'
             BoxLayout:
                 canvas.before:
                     Color:
@@ -568,24 +633,32 @@ Manager:
 
     GridLayout:
         cols: 1
-
         Label:
             text: "Explore"
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            font_size: 40
+            color: utils.get_color_from_hex(soft_black)
             size_hint: (1, .2)
         MapView:
             id: explore_map
             lat: 33.218850
             lon: -97.146090
             zoom: 10
+            size_hint: (1, .6)
         BoxLayout:
+            padding: 10
+
             Label:
                 text: "Search"
+                color: utils.get_color_from_hex(soft_black)
+                size_hint: (1, .1)
             TextInput:
                 id: search_content
+                size_hint: (1, .1)
             Label:
                 text: "List of Locations"
-            BoxLayout:
+                color: utils.get_color_from_hex(soft_black)
+                size_hint: (1, .1)
+            ScrollView:
                 canvas.before:
                     Color:
                         rgba: utils.get_color_from_hex(dark_peach)
