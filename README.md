@@ -52,9 +52,8 @@ dependencies:
       def __exit__(self, *args):
         _locale.setlocale(_locale.LC_TIME, self.oldlocale)
    ```
-        
-    Finally go here: KivyCalendar/calendar_ui.py
+   Finally go here: KivyCalendar/calendar_ui.py
       change `import calendar_data as cal_data`
       to `from . import calendar_data as cal_data`
-
+      
     You're done! Go on and prosper, the UI should run.
