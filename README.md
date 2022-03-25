@@ -36,9 +36,9 @@ dependencies:
   Then go here: KivyCalendar/calendar_data.py
     change `from calendar import TimeEncoding, month_name, day_abbr, Calendar, monthrange`
     to `from calendar import month_name, day_abbr, Calendar, monthrange`
-
     add this:
-    `
+    
+   ```python
     import locale as _locale
 
     class TimeEncoding:
@@ -51,8 +51,8 @@ dependencies:
 
       def __exit__(self, *args):
         _locale.setlocale(_locale.LC_TIME, self.oldlocale)
-      `
-
+   ```
+        
     Finally go here: KivyCalendar/calendar_ui.py
       change `import calendar_data as cal_data`
       to `from . import calendar_data as cal_data`
