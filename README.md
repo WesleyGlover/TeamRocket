@@ -17,7 +17,7 @@ nearby restaurants or police stations.  Users need to be able to enter their add
 the app gives them options on where to meet (that are near something – so not in the
 middle of nowhere) based on their needs (e.g., at a police station).
 
-dependencies:
+## Dependencies:
   Kivy: <br />
     `pip install kivy` <- also installs kivy-garden, I think. <br />
   KivyMD (so far optional): <br />
