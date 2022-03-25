@@ -194,6 +194,7 @@ Manager:
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
                 multiline: False
+                password: True
             Button:
                 background_color: utils.get_color_from_hex(dark_peach)
                 text: "Forgot Your Password?"
@@ -223,7 +224,7 @@ Manager:
             text: 'M'
             font_size: 32
             pos_hint: {'center_x': .5}
-            size_hint: (.2, .2)
+            size_hint: (.1, .1)
             #background_color: utils.get_color_from_hex(black_back)
             canvas.before:
                 Color:
@@ -239,7 +240,7 @@ Manager:
             color: utils.get_color_from_hex(soft_black)
             font_size: 32
             pos_hint: {'center_x': .5}
-            size_hint: (1, .5)
+            size_hint: (1, .2)
         #animation goes here, but image for now
         BoxLayout:
             canvas.before:
@@ -251,12 +252,6 @@ Manager:
 
 
             Label:
-                canvas.before:
-                    Color:
-                        rgba: utils.get_color_from_hex(dark_peach)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
                 text: "Name"
                 color: utils.get_color_from_hex(off_white)
                 font_size: 20
@@ -269,12 +264,18 @@ Manager:
                 size_hint: (.7, .2)
                 multiline: False
             Label:
-                canvas.before:
-                    Color:
-                        rgba: utils.get_color_from_hex(dark_peach)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
+                text: "Email"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: register_email_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Label:
                 text: "Username"
                 color: utils.get_color_from_hex(off_white)
                 font_size: 20
@@ -287,30 +288,20 @@ Manager:
                 size_hint: (.7, .2)
                 multiline: False
             Label:
-                canvas.before:
-                    Color:
-                        rgba: utils.get_color_from_hex(dark_peach)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
                 text: "Password"
                 color: utils.get_color_from_hex(off_white)
                 font_size: 20
                 pos_hint: {'center_x': .5, 'center_y': .7}
                 size_hint: (.7, .2)
+                password: True
             TextInput:
                 id: register_password_input
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
                 multiline: False
+                password: True
             Label:
-                canvas.before:
-                    Color:
-                        rgba: utils.get_color_from_hex(dark_peach)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
                 text: "Re-enter Password"
                 color: utils.get_color_from_hex(off_white)
                 font_size: 20

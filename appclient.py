@@ -73,6 +73,7 @@ class Meet_in_the_MiddleApp(App):
 
         # self.theme_cls.theme_style = "Light"
         Window.clearcolor = utils.get_color_from_hex(egg_back);
+        # Window.borderless = True;
 
     def build(self):
         return kv;
