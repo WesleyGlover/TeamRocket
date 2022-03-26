@@ -1,0 +1,688 @@
+#:import utils kivy.utils
+#:import MapView kivy.garden.mapview.MapView
+#:import Factory kivy.factory.Factory
+#:import calendar_ui KivyCalendar
+#:import CalendarWidget KivyCalendar
+
+#colors for app elements
+#text font colors
+#:set soft_black '#333333' #for sky_blue, aqua_blue, mint_green, peach_pink, egg_back
+#:set harsh_black: '#0F0F0F' #for apple_red
+#:set not_white '#EBEBEB' #for forest_green, night_blue, apple_red, thick_ice, black_back
+#:set off_white '#FCFCFC' #for dark_peach
+
+#colors for visual elements for app
+#:set apple_red '#F5345C' #can be used in both themes
+
+#:set mint_green '#B2EB9C' #not for light mode
+#:set peach_pink '#E0AF9D' #not for light mode
+#:set aqua_blue '#4ED2DB' #not for light mode
+#:set sky_blue '#51A6F5' #not for light mode
+
+#:set dark_peach '#D1797B' #not for dark mode (but can be used)
+#:set night_blue '#366EA3' #not for dark mode
+#:set forest_green '#1D7850' #not for dark mode
+#:set thick_ice '#0C6399' #not for dark mode
+
+#app beckground colors
+#:set black_back '#0D0D0D' #for dark mode background
+#:set egg_back '#F2F2F2' #for light mode background
+
+Manager:
+    TitleScreen:
+    LoginScreen:
+    RegisterScreen:
+    HomeScreen:
+    MeetingInfoScreen:
+    CreateMeetingScreen:
+    SettingsScreen:
+    CalenderScreen:
+    ConfirmRequestScreen:
+    ExploreScreen:
+
+<BoxLayout>
+    orientation: "vertical"
+    size: root.width, root.height
+
+    padding: 30
+    spacing: 10
+<Button>
+    background_normal: ''
+    background_color: utils.get_color_from_hex(night_blue) #if app.mode == 'light' else utils.get_color_from_hex(night_blue)
+    color: utils.get_color_from_hex(not_white)
+
+#defaults for the stupid calender
+<MonthYearLabel>
+    color: utils.get_color_from_hex(soft_black)
+    font_size: 30
+<DayAbbrLabel>
+    color: utils.get_color_from_hex(soft_black)
+<DayAbbrWeekendLabel>
+    color: utils.get_color_from_hex(dark_peach)
+
+<AppInfoPopup@Popup>
+    auto_dismiss: True
+    title: "How to use the app:"
+    size_hint: (.8, .8)
+
+    Label:
+        text: "This is how the app works"
+<RequestsPopup@Popup>
+    auto_dismiss: True
+    title: "Requests:"
+    size_hint: (.4, .4)
+    pos_hint: {'center_x': .8, 'center_y': .8}
+
+    Label:
+        text: "Requests go here"
+
+<TitleScreen>
+    name: "title"
+
+    BoxLayout:
+        Label: #will become an image once I make the logo
+            text: 'M'
+            font_size: 50
+            pos_hint: {'center_x': .5}
+            size_hint: (.4, .4)
+            #background_color: utils.get_color_from_hex(black_back)
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(black_back)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            color: utils.get_color_from_hex(not_white)
+            bold: True
+        Label:
+            text: "Meet in the Middle"
+            font_size: 50
+            color: utils.get_color_from_hex(soft_black)
+            pos_hint: {'center_x': .5}
+            size_hint: (1, .8)
+        #animation goes here, but image for now
+        # Image:
+        #     id: animation
+        #     source: 'images/test_image1.png
+        Label:
+            id: animate_me
+            size: 0, 20
+        Label:
+            id: accredation
+            text: "App by TeamRocket"
+            color: utils.get_color_from_hex(soft_black)
+            font_size: 16
+            pos_hint: {'center_x': 0.5}
+            size_hint: (.2, .2)
+
+        Button: #temp while i figure out touch events
+            text: "login screen"
+            font_size: 16
+            pos_hint: {'center_x': .5}
+            size_hint: (.3, .1)
+            on_press: app.root.current = "login"
+
+    #on_touch_down: app.root.current = "login"
+
+<LoginScreen>
+    name: "login"
+
+    BoxLayout:
+        Label: #will become an image once I make the logo
+            text: 'M'
+            font_size: 32
+            pos_hint: {'center_x': .5}
+            size_hint: (.2, .2)
+            #background_color: utils.get_color_from_hex(black_back)
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(black_back)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            color: utils.get_color_from_hex(not_white)
+            bold: True
+        Label:
+            id: app_title
+            text: "Meet in the Middle"
+            color: utils.get_color_from_hex(soft_black)
+            font_size: 32
+            pos_hint: {'center_x': .5}
+            size_hint: (1, .5)
+        #animation goes here, but image for now
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(dark_peach)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: "Username"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: username_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: "Password"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: password_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+                password: True
+            Button:
+                background_color: utils.get_color_from_hex(dark_peach)
+                text: "Forgot Your Password?"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 12
+                pos_hint: {'center_x': .5, 'center_y': .2}
+                size_hint: (.4, .1)
+                #on_press: #nothing for now
+            Button:
+                text: "Login"
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.5, .2)
+                on_press: app.root.current = "home" #should do validation though
+        Button: #temp while i figure out touch events
+            text: "Register"
+            font_size: 16
+            pos_hint: {'center_x': .5}
+            size_hint: (.3, .1)
+            on_press: app.root.current = "register"
+
+<RegisterScreen>
+    name: "register"
+
+    BoxLayout:
+        Label: #will become an image once I make the logo
+            text: 'M'
+            font_size: 32
+            pos_hint: {'center_x': .5}
+            size_hint: (.1, .1)
+            #background_color: utils.get_color_from_hex(black_back)
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(black_back)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            color: utils.get_color_from_hex(not_white)
+            bold: True
+        Label:
+            id: app_title
+            text: "Meet in the Middle"
+            color: utils.get_color_from_hex(soft_black)
+            font_size: 32
+            pos_hint: {'center_x': .5}
+            size_hint: (1, .2)
+        #animation goes here, but image for now
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(dark_peach)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+
+            Label:
+                text: "Name"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: register_name_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Label:
+                text: "Email"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: register_email_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Label:
+                text: "Username"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: register_username_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Label:
+                text: "Password"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+                password: True
+            TextInput:
+                id: register_password_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+                password: True
+            Label:
+                text: "Re-enter Password"
+                color: utils.get_color_from_hex(off_white)
+                font_size: 20
+                pos_hint: {'center_x': .5, 'center_y': .7}
+                size_hint: (.7, .2)
+            TextInput:
+                id: register_repassword_input
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.7, .2)
+                multiline: False
+            Button:
+                text: "Register"
+                font_size: 20
+                pos_hint: {'center_x': .5}
+                size_hint: (.5, .2)
+
+                #there should be validation and stuff, but for now we just go to the home screen
+                on_press: app.root.current = "home"
+
+<HomeScreen>
+    name: "home"
+
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            cols: 3
+            size_hint: (1, .2)
+
+            Button:
+                text: "S"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.2, .2)
+
+                on_press: app.root.current = "settings"
+            Label:
+                text: "Home"
+                color: utils.get_color_from_hex(soft_black)
+                font_size: 50
+            Button:
+                text: "i"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.2, .2)
+
+                on_press: Factory.AppInfoPopup().open() #pop up
+        MapView: #this map will show the user their current location
+            id: home_map
+            lat: 33.218850
+            lon: -97.146090
+            zoom: 17
+        BoxLayout:
+            BoxLayout:
+                id: upcoming_meeting_content
+                padding: 10
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                Label:
+                    text: "Upcoming Meetings"
+                    size_hint: (1, .2)
+                ScrollView:
+                    id: upcoming_meetings
+                    canvas.before:
+                        Color:
+                            rgba: utils.get_color_from_hex(peach_pink)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+            Button:
+                text: "Create A Meeting"
+                font_size: 14
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.5, .2)
+
+                #this button should call a function not just go to the create meeting page
+                on_press: app.root.current = 'create_meeting'
+        GridLayout:
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(thick_ice)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            cols: 3
+            size_hint: (1, .2)
+
+            Button:
+                text: "H"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                disabled: True
+            Button:
+                text: "C"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                on_press: app.root.current = "calender"
+            Button:
+                text: "E"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                on_press: app.root.current = "explore"
+
+<MeetingInfoScreen>
+    name: "meeting_info"
+
+    GridLayout:
+        cols: 1
+
+        Label:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint: (1, .2)
+        MapView: #this map will show the meeting location
+            id: meeting_info_map
+            lat: 33.218850
+            lon: -97.146090
+            zoom: 10
+        BoxLayout:
+            Label:
+            Button:
+
+<CreateMeetingScreen>
+    name: "create_meeting"
+
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            cols: 3
+            size_hint: (1, .2)
+
+            Button:
+                text: "<<"
+                on_press: app.root.current = 'home'
+                size_hint: (.2, 1)
+            Label:
+                text: "Create a Meeting"
+                font_size: 30
+                color: utils.get_color_from_hex(soft_black)
+            Label:
+                size_hint: (.2, 1)
+        MapView: #this map will show the possible locations based on the criteria layed out
+            id: create_meeting_map
+            lat: 33.218850
+            lon: -97.146090
+            zoom: 10
+        BoxLayout:
+            # Image: #map again
+            #     source: 'images/mexico_map.jpg'
+
+            GridLayout:
+                cols: 2
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                Label:
+                    text: "Cofee Shops"
+                CheckBox:
+                    id: coffee_check
+                Label:
+                    text: "Libraries"
+                CheckBox:
+                    id: library_check
+                Label:
+                    text: "Banks"
+                CheckBox:
+                    id: banks_check
+                Label:
+                    text: "Police Stations"
+                CheckBox:
+                    id: police_check
+                Label:
+                    text: "Fire Departments"
+                CheckBox:
+                    id: fire_check
+                Label:
+                    text: "Gas Stations"
+                CheckBox:
+                    id: gas_check
+
+
+            Button:
+                text: "Location Info"
+                size_hint: (.6, .3)
+                pos_hint: {"center_x": .5}
+                #on_press: #open the information for the location as a pop up
+
+<SettingsScreen>
+    name: "settings"
+
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            size_hint: (1, .2)
+
+            cols: 3
+            Button:
+                text: "<<"
+                size_hint: (.2, 1)
+
+                on_press: app.root.current = "home"
+            Label:
+                text: "Settings"
+                font_size: 40
+                color: utils.get_color_from_hex(soft_black)
+            Label:
+                size_hint: (.2, 1)
+        BoxLayout:
+<CalenderScreen>
+    name: "calender"
+
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            cols: 3
+            size_hint: (1, .2)
+
+            Label:
+                size_hint: (.2, 1)
+            Label:
+                text: "Calender"
+                font_size: 40
+                color: utils.get_color_from_hex(soft_black)
+            Button:
+                text: "R"
+                size_hint: (.2, 1)
+
+                on_press: Factory.RequestsPopup().open() #open request pop-up
+        CalendarWidget: #no options for this because it's weird
+        BoxLayout:
+            BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+        GridLayout:
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(thick_ice)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            cols: 3
+            size_hint: (1, .2)
+
+            Button:
+                text: "H"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                on_press: app.root.current = "home"
+            Button:
+                text: "C"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                disabled: True
+            Button:
+                text: "E"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                on_press: app.root.current = "explore"
+
+<ConfirmRequestScreen>
+    name: "confirm_request"
+
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            cols: 2
+            Button:
+            Label:
+        MapView:
+            id: confirm_request_map
+            lat: 33.218850
+            lon: -97.146090
+            zoom: 10
+        BoxLayout:
+            # Image: #map, image for now
+            #     source: "images/mexico_map.jpg"
+            GridLayout:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            GridLayout:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            Button:
+                text: "Confirm Meeting Information"
+                #on_press: #send the information to the server to create the meeting
+
+<ExploreScreen>
+    name: "explore"
+
+    GridLayout:
+        cols: 1
+        Label:
+            text: "Explore"
+            font_size: 40
+            color: utils.get_color_from_hex(soft_black)
+            size_hint: (1, .2)
+        MapView:
+            id: explore_map
+            lat: 33.218850
+            lon: -97.146090
+            zoom: 10
+            size_hint: (1, .6)
+        BoxLayout:
+            padding: 10
+
+            Label:
+                text: "Search"
+                color: utils.get_color_from_hex(soft_black)
+                size_hint: (1, .1)
+            TextInput:
+                id: search_content
+                size_hint: (1, .1)
+            Label:
+                text: "List of Locations"
+                color: utils.get_color_from_hex(soft_black)
+                size_hint: (1, .1)
+            ScrollView:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            #list of locations, which can be clicked on and make a pop-up
+        GridLayout:
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex(thick_ice)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            cols: 3
+            size_hint: (1, .2)
+
+            Button:
+                text: "H"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                on_press: app.root.current = "home"
+            Button:
+                text: "C"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                on_press: app.root.current = "calender"
+            Button:
+                text: "E"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: (.1, .1)
+
+                disabled: True
