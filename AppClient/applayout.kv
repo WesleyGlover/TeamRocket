@@ -46,6 +46,15 @@ Manager:
 
     padding: 30
     spacing: 10
+<Card>
+    orientation: "vertical"
+    size: root.width, root.height
+
+    style: "elevated"
+    elevation: 30
+    md_bg_color: utils.get_color_from_hex(dark_peach)
+    padding: 30
+    spacing: 10
 <Button>
     background_normal: ''
     background_color: utils.get_color_from_hex(night_blue) #if app.mode == 'light' else utils.get_color_from_hex(night_blue)
@@ -150,21 +159,15 @@ Manager:
             pos_hint: {'center_x': .5}
             size_hint: (1, .5)
         #animation goes here, but image for now
-        BoxLayout:
-            canvas.before:
-                Color:
-                    rgba: utils.get_color_from_hex(dark_peach)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
+        Card:
+            # canvas.before:
+            #     Color:
+            #         rgba: utils.get_color_from_hex(dark_peach)
+            #     Rectangle:
+            #         size: self.size
+            #         pos: self.pos
 
             Label:
-                canvas.before:
-                    Color:
-                        rgba: utils.get_color_from_hex(dark_peach)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
                 text: "Username"
                 color: utils.get_color_from_hex(off_white)
                 font_size: 20
@@ -177,12 +180,6 @@ Manager:
                 size_hint: (.7, .2)
                 multiline: False
             Label:
-                canvas.before:
-                    Color:
-                        rgba: utils.get_color_from_hex(dark_peach)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
                 text: "Password"
                 color: utils.get_color_from_hex(off_white)
                 font_size: 20
@@ -242,15 +239,7 @@ Manager:
             pos_hint: {'center_x': .5}
             size_hint: (1, .2)
         #animation goes here, but image for now
-        BoxLayout:
-            canvas.before:
-                Color:
-                    rgba: utils.get_color_from_hex(dark_peach)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-
-
+        Card:
             Label:
                 text: "Name"
                 color: utils.get_color_from_hex(off_white)
@@ -354,7 +343,7 @@ Manager:
             lon: -97.146090
             zoom: 17
         BoxLayout:
-            BoxLayout:
+            Card:
                 id: upcoming_meeting_content
                 padding: 10
                 canvas.before:

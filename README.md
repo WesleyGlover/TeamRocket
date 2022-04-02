@@ -12,10 +12,10 @@ Logan Wheeler <br />
 
 ### Description
 =======
-Spring 2022 UNT Capstone, Team Rocket. 
+Spring 2022 UNT Capstone, Team Rocket.
 
-# Project: Meet Me Halfway 
-# Project Overview 
+# Project: Meet Me Halfway
+# Project Overview
 #Members:
 Cameron Smyrl
 Matt Curtin
@@ -32,7 +32,7 @@ middle of nowhere) based on their needs (e.g., at a police station).
 ## Dependencies:
   Kivy: <br />
     `pip install kivy` <- also installs kivy-garden, I think. <br />
-  KivyMD (so far optional): <br />
+  KivyMD (no longer optional): <br />
     `pip install kivymd` <br />
   MapView: <br />
     `pip install mapview` <br />
@@ -51,7 +51,7 @@ middle of nowhere) based on their needs (e.g., at a police station).
     change `from calendar import TimeEncoding, month_name, day_abbr, Calendar, monthrange` <br />
     to `from calendar import month_name, day_abbr, Calendar, monthrange` <br />
     add this: <br />
-    
+
    ```python
     import locale as _locale
 

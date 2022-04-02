@@ -1,11 +1,18 @@
 import kivy.utils as utils;
-from kivy.app import App;
+# from kivy.app import App;
 from kivy.lang import Builder;
 from kivy.uix.screenmanager import ScreenManager, Screen;
 from kivy.properties import ObjectProperty;
 from kivy.core.window import Window;
 from kivy.animation import Animation;
-from kivy.uix.popup import Popup
+from kivy.uix.popup import Popup;
+
+from kivymd.app import MDApp;
+from kivymd.uix.behaviors import RoundedRectangularElevationBehavior;
+from kivymd.uix.card import MDCard;
+
+class Card(MDCard, RoundedRectangularElevationBehavior):
+    pass;
 
 #constants
 #colors for app elements
@@ -64,10 +71,7 @@ class Manager(ScreenManager):
 #set the app size
 Window.size = (900/2, 1600/2);
 
-#grab the design document
-kv = Builder.load_file('applayout.kv');
-
-class Meet_in_the_MiddleApp(App):
+class Meet_in_the_MiddleApp(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs);
 
@@ -76,6 +80,8 @@ class Meet_in_the_MiddleApp(App):
         # Window.borderless = True;
 
     def build(self):
+        #grab the design document
+        kv = Builder.load_file('applayout.kv');
         return kv;
 
 if __name__ == '__main__':

@@ -53,3 +53,4 @@ dkms.conf
 
 #cache files
 /cache/*
+/AppClient/cache/*
