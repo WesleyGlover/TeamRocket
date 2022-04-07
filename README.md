@@ -34,6 +34,8 @@ middle of nowhere) based on their needs (e.g., at a police station).
     `pip install kivy` <- also installs kivy-garden, I think. <br />
   KivyMD (so far optional): <br />
     `pip install kivymd` <br />
+  Twisted: <br />
+    `pip install twisted` <br />
   MapView: <br />
     `pip install mapview` <br />
     `garden install mapview` (optional) <br />
