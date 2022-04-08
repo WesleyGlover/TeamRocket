@@ -32,6 +32,10 @@ address2 = "332 East Hickory Street, Denton, Texas 76201, United States"
 location1 = app.geocode(address1).raw
 location2 = app.geocode(address2).raw
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ad8900fd735e7d1f35dc5641278a12bce981b718
 print(location1['lat'], location1['lon'])
 print(location2['lat'], location2['lon'])
 

@@ -125,7 +125,8 @@ Manager:
 
 <LoginScreen>
     name: "login"
-
+    username_input: username_input
+    app: root
     BoxLayout:
         Image: #will become an image once I make the logo
             pos_hint: {'center_x': .5, 'center_y': .2}
@@ -185,7 +186,7 @@ Manager:
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.5, .2)
-                on_press: app.root.current = "home" #should do validation though
+                on_press: root.button_onclick_login(); app.root.current = "home" #should do validation though
         Button: #temp while i figure out touch events
             text: "Register"
             font_size: 16
@@ -319,8 +320,8 @@ Manager:
                 on_press: Factory.AppInfoPopup().open() #pop up
         MapView: #this map will show the user their current location
             id: home_map
-            lat: 33.218850
-            lon: -97.146090
+            lat: root.get_user_lat()
+            lon: root.get_user_lon()
             zoom: 17
         BoxLayout:
             Card:
