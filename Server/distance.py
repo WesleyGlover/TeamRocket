@@ -11,7 +11,7 @@ lat_1 = 33.218850
 lon_1 = -97.146090
 lat_2 = 33.210126
 lon_2 = -97.149010
-# call the OSMR API. 
+# call the OSMR API.
 r = requests.get(f"http://router.project-osrm.org/route/v1/car/{lon_1},{lat_1};{lon_2},{lat_2}?overview=false""")# then you load the response using the json libray
 # by default you get only one alternative so you access 0-th element of the `routes`
 routes = json.loads(r.content)
@@ -32,10 +32,6 @@ address2 = "332 East Hickory Street, Denton, Texas 76201, United States"
 location1 = app.geocode(address1).raw
 location2 = app.geocode(address2).raw
 
-<<<<<<< HEAD
-=======
-
->>>>>>> ad8900fd735e7d1f35dc5641278a12bce981b718
 print(location1['lat'], location1['lon'])
 print(location2['lat'], location2['lon'])
 
