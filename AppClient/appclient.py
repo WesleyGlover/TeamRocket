@@ -17,6 +17,9 @@ from kivy.support import install_twisted_reactor
 install_twisted_reactor()
 from twisted.internet import reactor, protocol
 
+#clear files from cache
+import os
+
 #constants
 #colors for app elements
 #text font colors
@@ -140,6 +143,12 @@ class Meet_in_the_MiddleApp(App):
         # self.theme_cls.theme_style = "Light"
         Window.clearcolor = utils.get_color_from_hex(egg_back);
         # Window.borderless = True;
+
+        #Clear all files in the cache
+ 
+        dir = './cache'
+        for f in os.listdir(dir):
+            os.remove(os.path.join(dir, f))
 
     def build(self):
         self.connect_to_server() #For server
