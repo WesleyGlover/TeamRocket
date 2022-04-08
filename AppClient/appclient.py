@@ -54,12 +54,13 @@ class EchoClient(protocol.Protocol):
     #we don't know if thing thing or not. Wesley look at this 
     #self connection = connection
     def connectionMade(self):
-        self.factory.app.on_connection(self.transport)
-
+        #self.factory.app.on_connection(self.transport)
+        print("Connected yo")
+        pass
     #Return response from server
     def dataReceived(self, data):
-        self.factory.app.print_message(data.decode('utf-8'))
-
+        #self.factory.app.print_message(data.decode('utf-8'))
+        pass
 
 class EchoClientFactory(protocol.ClientFactory):
     protocol = EchoClient
@@ -84,7 +85,13 @@ class EchoClientFactory(protocol.ClientFactory):
 class TitleScreen(Screen):
     pass;
 class LoginScreen(Screen):
-    pass;
+
+    def __init__(self, **kw):
+        super().__init__(**kw)
+
+    def button_onclick_login(self):
+        self.connection.write(self.username_input.text.encode('utf-8'))
+
 class RegisterScreen(Screen):
     pass;
 class HomeScreen(Screen):
@@ -158,12 +165,11 @@ class Meet_in_the_MiddleApp(App):
     def connect_to_server(self):
         #Values will need to change when connecting to actual server
         reactor.connectTCP('localhost', 8000, EchoClientFactory(self))
+        
 
-    def send_message(self, *args):
-        msg = self.textbox.text
+    def send_message(self, msg):
         if msg and self.connection:
             self.connection.write(msg.encode('utf-8'))
-            self.textbox.text = ""
 
 if __name__ == '__main__':
     Meet_in_the_MiddleApp().run();

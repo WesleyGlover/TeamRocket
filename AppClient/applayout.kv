@@ -126,7 +126,8 @@ Manager:
 
 <LoginScreen>
     name: "login"
-
+    username_input: username_input
+    app: root
     BoxLayout:
         Label: #will become an image once I make the logo
             text: 'M'
@@ -208,7 +209,7 @@ Manager:
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.5, .2)
-                on_press: app.root.current = "home" #should do validation though
+                on_press: root.button_onclick_login(); app.root.current = "home" #should do validation though
         Button: #temp while i figure out touch events
             text: "Register"
             font_size: 16
