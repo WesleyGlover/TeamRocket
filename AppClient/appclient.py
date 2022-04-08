@@ -1,18 +1,24 @@
 import kivy.utils as utils;
-# from kivy.app import App;
+from kivy.app import App;
 from kivy.lang import Builder;
 from kivy.uix.screenmanager import ScreenManager, Screen;
 from kivy.properties import ObjectProperty;
 from kivy.core.window import Window;
 from kivy.animation import Animation;
-from kivy.uix.popup import Popup;
+from kivy.uix.popup import Popup
 
-from kivymd.app import MDApp;
-from kivymd.uix.behaviors import RoundedRectangularElevationBehavior;
-from kivymd.uix.card import MDCard;
+#location services
+import datetime
+from geopy.geocoders import Nominatim
+import geocoder
 
-class Card(MDCard, RoundedRectangularElevationBehavior):
-    pass;
+#Server connectivity
+from kivy.support import install_twisted_reactor
+install_twisted_reactor()
+from twisted.internet import reactor, protocol
+
+#clear files from cache
+import os
 
 #constants
 #colors for app elements
@@ -42,15 +48,77 @@ egg_back = '#F2F2F2' #for light mode background
 #settings_file = open('brownie.set', 'rw');
 #option = settings_file.readline();
 
+
+#Classes for connecting to server complimentary of wesley
+class EchoClient(protocol.Protocol):
+    #we don't know if thing thing or not. Wesley look at this 
+    #self connection = connection
+    def connectionMade(self):
+        #self.factory.app.on_connection(self.transport)
+        print("Connected yo")
+        pass
+    #Return response from server
+    def dataReceived(self, data):
+        #self.factory.app.print_message(data.decode('utf-8'))
+        pass
+
+class EchoClientFactory(protocol.ClientFactory):
+    protocol = EchoClient
+
+    def __init__(self, app):
+        self.app = app
+
+    def startedConnecting(self, connector):
+        pass
+        #self.app.print_message('Started to connect.')
+
+    def clientConnectionLost(self, connector, reason):
+        pass
+        #self.app.print_message('Lost connection.')
+
+    def clientConnectionFailed(self, connector, reason):
+        pass
+        #self.app.print_message('Connection failed.')
+##End server classes
+
 #define our screens (we have quite a few)
 class TitleScreen(Screen):
     pass;
 class LoginScreen(Screen):
-    pass;
+
+    def __init__(self, **kw):
+        super().__init__(**kw)
+
+    def button_onclick_login(self):
+        self.connection.write(self.username_input.text.encode('utf-8'))
+
 class RegisterScreen(Screen):
     pass;
 class HomeScreen(Screen):
-    pass;
+    def get_user_lat(self):
+        app = Nominatim(user_agent="MITM")
+
+        #Get location based on user
+        location = geocoder.ip('me')
+
+        lat = location.geojson['features'][0]['properties']['lat']
+        return lat
+
+    def get_user_lon(self):
+        app = Nominatim(user_agent="MITM")
+
+        location = geocoder.ip('me')
+
+        lon = location.geojson['features'][0]['properties']['lng']
+
+        return lon
+
+    # def set_map_location(self):
+    #     lat, lon = get_user_location()
+    
+    #     self.ids.home_map.lat = lat
+    #     self.ids.home_map.lon = lon
+
 class MeetingInfoScreen(Screen):
     pass;
 class CreateMeetingScreen(Screen):
@@ -71,7 +139,11 @@ class Manager(ScreenManager):
 #set the app size
 Window.size = (900/2, 1600/2);
 
-class Meet_in_the_MiddleApp(MDApp):
+#grab the design document
+kv = Builder.load_file('applayout.kv');
+    
+
+class Meet_in_the_MiddleApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs);
 
@@ -79,10 +151,25 @@ class Meet_in_the_MiddleApp(MDApp):
         Window.clearcolor = utils.get_color_from_hex(egg_back);
         # Window.borderless = True;
 
+        #Clear all files in the cache
+ 
+        dir = './cache'
+        for f in os.listdir(dir):
+            os.remove(os.path.join(dir, f))
+
     def build(self):
-        #grab the design document
-        kv = Builder.load_file('applayout.kv');
+        self.connect_to_server() #For server
         return kv;
+
+    #Server connectivity funtionality
+    def connect_to_server(self):
+        #Values will need to change when connecting to actual server
+        reactor.connectTCP('localhost', 8000, EchoClientFactory(self))
+        
+
+    def send_message(self, msg):
+        if msg and self.connection:
+            self.connection.write(msg.encode('utf-8'))
 
 if __name__ == '__main__':
     Meet_in_the_MiddleApp().run();
