@@ -89,20 +89,10 @@ Manager:
     name: "title"
 
     BoxLayout:
-        Label: #will become an image once I make the logo
-            text: 'M'
-            font_size: 50
-            pos_hint: {'center_x': .5}
+        Image: #will become an image once I make the logo
+            pos_hint: {'center_x': .5, 'center_y': .2}
             size_hint: (.4, .4)
-            #background_color: utils.get_color_from_hex(black_back)
-            canvas.before:
-                Color:
-                    rgba: utils.get_color_from_hex(black_back)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            color: utils.get_color_from_hex(not_white)
-            bold: True
+            source: 'image/mitm_logo.png'
         Label:
             text: "Meet in the Middle"
             font_size: 50
@@ -137,20 +127,10 @@ Manager:
     name: "login"
 
     BoxLayout:
-        Label: #will become an image once I make the logo
-            text: 'M'
-            font_size: 32
-            pos_hint: {'center_x': .5}
+        Image: #will become an image once I make the logo
+            pos_hint: {'center_x': .5, 'center_y': .2}
             size_hint: (.2, .2)
-            #background_color: utils.get_color_from_hex(black_back)
-            canvas.before:
-                Color:
-                    rgba: utils.get_color_from_hex(black_back)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            color: utils.get_color_from_hex(not_white)
-            bold: True
+            source: 'image/mitm_logo.png'
         Label:
             id: app_title
             text: "Meet in the Middle"
