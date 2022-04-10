@@ -1,6 +1,7 @@
 # install_twisted_rector must be called before importing and using the reactor
 from kivy.support import install_twisted_reactor
 import os
+import mysql.connector
 
 install_twisted_reactor()
 
@@ -109,7 +110,29 @@ class MITMServerApp(App):
         msg = "Registered!"
         return msg
 
+    # DB Auth
 
+    def database_auth():
+        try:
+            connection = mysql.connector.connect(
+                user='doadmin',
+                password ='AVNS_WZEScW_Y5FNKr7m',
+                host='db-mysql-teamrocket-do-user-11106141-0.b.db.ondigitalocean.com',
+                port = 25060,
+                database='defaultdb'
+            )
+            print('\n[+] Connected to db-mysql-teamrocket-do-user-11106141-0.b.db.ondigitalocean.com Successfully')
+
+            cursor = connection.cursor()
+            cursor.execute("Select * From User")
+            result = cursor.fetchall()
+            print("Output from query : Select * From User:")
+            print(type(result))
+            print(result, '\n')
+            
+        except BaseException as e:
+            print(str(e))
+    database_auth()
 
 if __name__ == '__main__':
     MITMServerApp().run()
