@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 from ctypes import sizeof
 from re import M
 import requests
@@ -41,8 +40,8 @@ combAdd = [] #final list of qt locations with format: ['1234 Five ave/tx/denton'
 #Feed the states abbreviations into the url to get to that states page
 #To make this search every state for qt locations replace range(2): with range(0,len(stateAbList)) and {stateAbList[2]} with {stateAbList[i]}
 
-for i in range(0,1):
-    StateUrl = f"https://locations.quiktrip.com/{stateAbList[2]}"
+for i in range(12,14):
+    StateUrl = f"https://locations.quiktrip.com/{stateAbList[i]}"
     page = requests.get(StateUrl).text
     doc = BeautifulSoup(page, "html.parser")
     cities = doc.find_all(class_="Directory-listLink")
@@ -82,6 +81,7 @@ for i in range(0,1):
 
 
 try:
+
     connection = mysql.connector.connect(
         user='doadmin',
         password ='AVNS_WZEScW_Y5FNKr7m',
@@ -91,20 +91,20 @@ try:
     )
 
     cursor = connection.cursor()
-    cursor.execute("Select * From Location")
-    result = cursor.fetchall()
-    print(result)
+    #cursor.execute("Select * From Location")
+    #result = cursor.fetchall()
+    #print(result)
     
 except BaseException as e:
     print(str(e))
 
-x = 0
 for i in combAdd:
-    sqls = "INSERT INTO defaultdb.Location (LocationID,Location) VALUES (%s, %s)"
-    x+=1
-    val = (x,i)
-    print(val)
-    cursor.execute(sqls,val)
+    lst = []
+    lst.append(i)
+
+    
+    sqls = "INSERT INTO defaultdb.Location VALUES (%s)"
+    cursor.execute(sqls,lst)
     connection.commit()
 
 
