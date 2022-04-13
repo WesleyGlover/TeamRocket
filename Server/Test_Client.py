@@ -62,7 +62,7 @@ class TwistedClientApp(App):
         return layout
 
     def connect_to_server(self):
-        reactor.connectTCP('localhost', 8000, EchoClientFactory(self))
+        reactor.connectTCP('localhost', 25565, EchoClientFactory(self))
 
     def on_connection(self, connection):
         self.print_message("Connected successfully!")
