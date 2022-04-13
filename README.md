@@ -5,11 +5,11 @@ Spring 2022 UNT Capstone, Team Rocket.
 # Project: Meet Me Halfway
 ## Project Overview
 ### Members:
-Cameron Smyrl   smyrlcam<br />
-Matt Curtin     MattCurtin12<br />
-Kalvin Garcia   OchaKaru<br />
-Logan Wheeler   BraysonWheeler<br />
-Wesley Glover   WesleyGlover<br />
+Cameron Smyrl   \tsmyrlcam<br />
+Matt Curtin     \tMattCurtin12<br />
+Kalvin Garcia   \tOchaKaru<br />
+Logan Wheeler   \tBraysonWheeler<br />
+Wesley Glover   \tWesleyGlover<br />
 
 ### Description
 =======
