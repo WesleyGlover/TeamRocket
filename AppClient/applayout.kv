@@ -327,24 +327,11 @@ Manager:
             Card:
                 id: upcoming_meeting_content
                 padding: 10
-                canvas.before:
-                    Color:
-                        rgba: utils.get_color_from_hex(dark_peach)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
                 Label:
                     text: "Upcoming Meetings"
                     size_hint: (1, .2)
-                ScrollView:
+                MeetingLayout:
                     id: upcoming_meetings
-                    canvas.before:
-                        Color:
-                            rgba: utils.get_color_from_hex(peach_pink)
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
-
             Button:
                 text: "Create A Meeting"
                 font_size: 14

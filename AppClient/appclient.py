@@ -18,6 +18,8 @@ import datetime
 from geopy.geocoders import Nominatim
 import geocoder
 
+from utility import MeetingLayout
+
 #Server connectivity
 from kivy.support import install_twisted_reactor
 install_twisted_reactor()
@@ -57,7 +59,7 @@ egg_back = '#F2F2F2' #for light mode background
 
 #Classes for connecting to server complimentary of wesley
 class EchoClient(protocol.Protocol):
-    #we don't know if thing thing or not. Wesley look at this 
+    #we don't know if thing thing or not. Wesley look at this
     #self connection = connection
     def connectionMade(self):
         self.factory.app.on_connection(self.transport)
@@ -135,7 +137,7 @@ Window.size = (900/2, 1600/2);
 
 #grab the design document
 
-    
+
 
 class Meet_in_the_MiddleApp(MDApp):
     def __init__(self, **kwargs):
