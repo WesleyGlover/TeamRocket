@@ -68,7 +68,7 @@ def validate_address(address):
 #   Alphanumeric
 def validate_username(username):
     #define username regex
-    regex = "^[A-Za-z\d@$!#%*?&]{3,}$"
+    regex = "^[A-Za-z\d@$!#%*?&]{3,20}$"
     pattern = re.compile(regex)
 
     #Match password to pattern

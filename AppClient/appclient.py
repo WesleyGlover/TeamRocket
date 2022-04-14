@@ -1,11 +1,11 @@
 import kivy.utils as utils;
-# from kivy.app import App;
+#from kivy.app import App;
 from kivy.lang import Builder;
 from kivy.uix.screenmanager import ScreenManager, Screen;
 from kivy.properties import ObjectProperty;
 from kivy.core.window import Window;
 from kivy.animation import Animation;
-from kivy.uix.popup import Popup;
+from kivy.uix.popup import Popup
 
 from kivymd.app import MDApp;
 from kivymd.uix.behaviors import RoundedRectangularElevationBehavior;
@@ -13,6 +13,18 @@ from kivymd.uix.card import MDCard;
 
 class Card(MDCard, RoundedRectangularElevationBehavior):
     pass;
+#location services
+import datetime
+from geopy.geocoders import Nominatim
+import geocoder
+
+#Server connectivity
+from kivy.support import install_twisted_reactor
+install_twisted_reactor()
+from twisted.internet import reactor, protocol
+
+#clear files from cache
+import os
 
 #constants
 #colors for app elements
@@ -42,6 +54,38 @@ egg_back = '#F2F2F2' #for light mode background
 #settings_file = open('brownie.set', 'rw');
 #option = settings_file.readline();
 
+
+#Classes for connecting to server complimentary of wesley
+class EchoClient(protocol.Protocol):
+    #we don't know if thing thing or not. Wesley look at this 
+    #self connection = connection
+    def connectionMade(self):
+        self.factory.app.on_connection(self.transport)
+
+    #Return response from server
+    def dataReceived(self, data):
+        self.factory.app.print_message(data.decode('utf-8'))
+
+
+class EchoClientFactory(protocol.ClientFactory):
+    protocol = EchoClient
+
+    def __init__(self, app):
+        self.app = app
+
+    def startedConnecting(self, connector):
+        pass
+        #self.app.print_message('Started to connect.')
+
+    def clientConnectionLost(self, connector, reason):
+        pass
+        #self.app.print_message('Lost connection.')
+
+    def clientConnectionFailed(self, connector, reason):
+        pass
+        #self.app.print_message('Connection failed.')
+##End server classes
+
 #define our screens (we have quite a few)
 class TitleScreen(Screen):
     pass;
@@ -50,7 +94,24 @@ class LoginScreen(Screen):
 class RegisterScreen(Screen):
     pass;
 class HomeScreen(Screen):
-    pass;
+    def get_user_lat(self):
+        app = Nominatim(user_agent="MITM")
+
+        #Get location based on user
+        location = geocoder.ip('me')
+
+        lat = location.geojson['features'][0]['properties']['lat']
+        return lat
+
+    def get_user_lon(self):
+        app = Nominatim(user_agent="MITM")
+
+        location = geocoder.ip('me')
+
+        lon = location.geojson['features'][0]['properties']['lng']
+
+        return lon
+
 class MeetingInfoScreen(Screen):
     pass;
 class CreateMeetingScreen(Screen):
@@ -64,12 +125,17 @@ class ConfirmRequestScreen(Screen):
 class ExploreScreen(Screen):
     pass;
 
+
 #creating the screen manager
 class Manager(ScreenManager):
     pass;
 
 #set the app size
 Window.size = (900/2, 1600/2);
+
+#grab the design document
+
+    
 
 class Meet_in_the_MiddleApp(MDApp):
     def __init__(self, **kwargs):
@@ -79,10 +145,26 @@ class Meet_in_the_MiddleApp(MDApp):
         Window.clearcolor = utils.get_color_from_hex(egg_back);
         # Window.borderless = True;
 
+        #Clear all files in the cache
+        dir = './cache'
+        for f in os.listdir(dir):
+            os.remove(os.path.join(dir, f))
+
     def build(self):
-        #grab the design document
+        self.connect_to_server() #For server
         kv = Builder.load_file('applayout.kv');
         return kv;
+
+    #Server connectivity funtionality
+    def connect_to_server(self):
+        #Values will need to change when connecting to actual server
+        reactor.connectTCP('localhost', 8000, EchoClientFactory(self))
+
+    def send_message(self, *args):
+        msg = self.textbox.text
+        if msg and self.connection:
+            self.connection.write(msg.encode('utf-8'))
+            self.textbox.text = ""
 
 if __name__ == '__main__':
     Meet_in_the_MiddleApp().run();
