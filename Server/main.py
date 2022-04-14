@@ -33,7 +33,7 @@ class MITMServerApp(App):
     # Initializing the server
     def build(self):
         self.label = Label(text="server started\n")
-        reactor.listenTCP(8000, MITMServerFactory(self))
+        reactor.listenTCP(25565, MITMServerFactory(self))
         return self.label
 
     def setup_gui(self):

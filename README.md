@@ -5,10 +5,11 @@ Spring 2022 UNT Capstone, Team Rocket.
 # Project: Meet Me Halfway
 ## Project Overview
 ### Members:
-Cameron Smyrl <br />
-Matt Curtin <br />
-Kalvin Garcia <br />
-Logan Wheeler <br />
+Cameron Smyrl   : smyrlcam<br />
+Matt Curtin     : MattCurtin12<br />
+Kalvin Garcia   : OchaKaru<br />
+Logan Wheeler   : BraysonWheeler<br />
+Wesley Glover   : WesleyGlover<br />
 
 ### Description
 =======
@@ -21,6 +22,7 @@ Cameron Smyrl
 Matt Curtin
 Kalvin Garcia
 Logan Wheeler
+Wesley Glover
 
 Sometimes 2 people need to meet halfway (more or less) between where they are.  
 Common examples are custody exchanges or trying to meet a relative/friend who is
