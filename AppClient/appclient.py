@@ -5,7 +5,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen;
 from kivy.properties import ObjectProperty;
 from kivy.core.window import Window;
 from kivy.animation import Animation;
-from kivy.uix.popup import Popup
+from kivy.uix.popup import Popup;
 
 from kivymd.app import MDApp;
 from kivymd.uix.behaviors import RoundedRectangularElevationBehavior;
