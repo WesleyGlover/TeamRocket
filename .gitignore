@@ -56,3 +56,4 @@ dkms.conf
 /AppClient/cache/*
 /AppClient/utility/__pycache__/
 /AppClient/utility/__pycache__/*
+/AppClient\utility\__pycache__\input_validation.cpython-310.pyc
