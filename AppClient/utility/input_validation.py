@@ -15,7 +15,7 @@ import re
 #   Letters an numbers
 def validate_name(name):
     #define password regex
-    regex = "^[A-Za-z ]{1,}$"
+    regex = "^[A-Za-z ]{1,30}$"
     pattern = re.compile(regex)
 
     #Match password to pattern

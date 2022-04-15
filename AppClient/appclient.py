@@ -96,6 +96,11 @@ class EchoClientFactory(protocol.ClientFactory):
         #self.app.print_message('Connection failed.')
 ##End server classes
 
+#Global function for anyone to send message to server
+def send_message(app, msg):
+        if msg and app.connection:
+            app.connection.write(msg.encode('utf-8'))
+
 #define our screens (we have quite a few)
 class TitleScreen(Screen):
     pass;
@@ -200,6 +205,7 @@ class Meet_in_the_MiddleApp(MDApp):
         #Values will need to change when connecting to actual server
         reactor.connectTCP('localhost', 8000, EchoClientFactory(self))
 
+<<<<<<< Updated upstream
     def on_connection(self, connection):
             self.connection = connection
 
@@ -209,6 +215,8 @@ class Meet_in_the_MiddleApp(MDApp):
 
 app = Meet_in_the_MiddleApp();
 
+=======
+>>>>>>> Stashed changes
 if __name__ == '__main__':
     app.run();
 
