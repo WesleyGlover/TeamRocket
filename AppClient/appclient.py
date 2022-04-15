@@ -1,3 +1,4 @@
+from operator import truediv
 import kivy.utils as utils;
 #from kivy.app import App;
 from kivy.lang import Builder;
@@ -13,6 +14,7 @@ from kivymd.uix.card import MDCard;
 
 class Card(MDCard, RoundedRectangularElevationBehavior):
     pass;
+
 #location services
 import datetime
 from geopy.geocoders import Nominatim
@@ -27,6 +29,9 @@ from twisted.internet import reactor, protocol
 
 #clear files from cache
 import os
+
+#For input validation
+from utility import input_validation
 
 #constants
 #colors for app elements
@@ -66,7 +71,8 @@ class EchoClient(protocol.Protocol):
 
     #Return response from server
     def dataReceived(self, data):
-        self.factory.app.print_message(data.decode('utf-8'))
+        pass
+        #self.factory.app.print_message(data.decode('utf-8'))
 
 
 class EchoClientFactory(protocol.ClientFactory):
@@ -80,19 +86,52 @@ class EchoClientFactory(protocol.ClientFactory):
         #self.app.print_message('Started to connect.')
 
     def clientConnectionLost(self, connector, reason):
+        print("Losr")
         pass
         #self.app.print_message('Lost connection.')
 
     def clientConnectionFailed(self, connector, reason):
+        print("failure")
         pass
         #self.app.print_message('Connection failed.')
 ##End server classes
 
+#Global function for anyone to send message to server
+def send_message(app, msg):
+        if msg and app.connection:
+            app.connection.write(msg.encode('utf-8'))
+
 #define our screens (we have quite a few)
 class TitleScreen(Screen):
     pass;
+
+#Screen for when user already registered and wants to log in
 class LoginScreen(Screen):
-    pass;
+    def login_button_onclick(self):
+        #Get text input from text boxes
+        user = self.ids.username_input.text
+        password = self.ids.password_input.text
+
+        #Check if user input was valid email
+        valid_email = input_validation.validate_email(user)
+        valid_username = input_validation.validate_username(user)
+        valid_password = input_validation.validate_password(password)
+
+        successful = False
+
+        if valid_email and valid_password:
+            self.app.send_message("Email:" + user + ",Password:" + password)    
+            successful = True
+        if valid_username and valid_password:
+            self.app.send_message("Username:" + user + ",Password:" + password)
+            successful = True
+
+        if successful:
+            print("yay")
+            return
+
+        print("nooo")
+
 class RegisterScreen(Screen):
     pass;
 class HomeScreen(Screen):
@@ -140,6 +179,8 @@ Window.size = (900/2, 1600/2);
 
 
 class Meet_in_the_MiddleApp(MDApp):
+    connection = None
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs);
 
@@ -157,19 +198,27 @@ class Meet_in_the_MiddleApp(MDApp):
         kv = Builder.load_file('applayout.kv');
         return kv;
 
+
+
     #Server connectivity funtionality
     def connect_to_server(self):
         #Values will need to change when connecting to actual server
         reactor.connectTCP('localhost', 8000, EchoClientFactory(self))
 
-    def send_message(self, *args):
-        msg = self.textbox.text
+<<<<<<< Updated upstream
+    def on_connection(self, connection):
+            self.connection = connection
+
+    def send_message(self, msg):
         if msg and self.connection:
             self.connection.write(msg.encode('utf-8'))
-            self.textbox.text = ""
 
+app = Meet_in_the_MiddleApp();
+
+=======
+>>>>>>> Stashed changes
 if __name__ == '__main__':
-    Meet_in_the_MiddleApp().run();
+    app.run();
 
 #settings_file.write();
 #settings_file.close();
