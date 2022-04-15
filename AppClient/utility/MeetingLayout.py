@@ -34,35 +34,34 @@ Builder.load_string("""
 #:set black_back '#0D0D0D' #for dark mode background
 #:set egg_back '#F2F2F2' #for light mode background
 
+#These are defaults for the MeetingLayout classes
 <MeetingLayout>:
-    do_scroll_x: False
+    do_scroll_x: False #needs to be false to scoll only in 'y' direction
     do_scroll_y: True
-    size_hint_y: None
 <MeetingBandContainer>
     oriention: "vertical"
-    size_hint_y: None
+    size_hint_y: None #needs to be none to scrollview properly
 <MeetingBand>:
-    size_hint_y: None
+    size_hint_y: None #needs to be none to scrollview properly
+    height: 40 #we have to manually set the height of the bands
     md_bg_color: utils.get_color_from_hex(peach_pink)
-    ripple_behavior: True
-    on_touch_down: self.on_touch_down(args[1])
+    ripple_behavior: True #cool ripple effect so that the user knows which band they touched
+    on_touch_down: self.on_touch_down(args[1]) #we call that sweet meeting popup
 <MeetingName>:
     id: meeting_name
+    pos_hint: {"center_y": .5}
     color: utils.get_color_from_hex(soft_black)
 <MeetingInstigator>:
     id: meeting_instigator
+    pos_hint: {"center_y": .5}
     color: utils.get_color_from_hex(soft_black)
 <MeetingDate>:
     id: meeting_date
+    pos_hint: {"center_y": .5}
     color: utils.get_color_from_hex(soft_black)
 """)
 
-class Data:
-    meeting_id = None;
-    meeting_name = None;
-    meeting_instigator = None;
-    meeting_date = None;
-
+#The MeetingInfoPopup will display on band touch
 class MeetingInfoPopup(Popup):
     pass;
 
@@ -76,15 +75,15 @@ class MeetingLayout(ScrollView):
         ins_data.meeting_instigator = "Kalvin";
         ins_data.meeting_date = "May 20, 2020";
 
-        proc_data_set = [ins_data, ins_data, ins_data, ins_data, ins_data, ins_data] #self.prepare_data();
+        proc_data_set = [ins_data] #self.prepare_data();
         self.init_ui(proc_data_set);
 
     def init_ui(self, data):
-        self.main_view = MeetingBandContainer();
+        self.main_view = MeetingBandContainer(); #create the boxlayout that goes in the scrollview
         self.main_view.bind(minimum_height=self.main_view.setter('height'))
         self.add_widget(self.main_view);
 
-        self.main_view.band_list = [];
+        self.main_view.band_list = []; #i made the bands into a list so we can access them later if need be
 
         count = 0;
         for d in data:
@@ -101,16 +100,17 @@ class MeetingLayout(ScrollView):
         self.main_view.add_widget(self.main_view.band_list[position]);
 
     def prepare_data(self, data_set):
+        #self.app.get_data(); #we ask the server nicely for the current user's meetings
         pass;
 
 class MeetingBandContainer(BoxLayout):
     pass;
 
 class MeetingBand(MDCard):
-    meeting_id = None;
+    meeting_id = None; #keep track of the meeting_id so that we can kill it later, maybe
 
     def on_touch_down(self, touch):
-        meeting_popup = MeetingInfoPopup();
+        meeting_popup = MeetingInfoPopup(); #might pass that to the MeetingInfoPopup so that we can display all the info
         meeting_popup.open();
 
 class MeetingName(Label):
@@ -119,3 +119,9 @@ class MeetingInstigator(Label):
     pass;
 class MeetingDate(Label):
     pass;
+
+class Data: #this is the data class the meetinglayout will be using
+    meeting_id = None;
+    meeting_name = None;
+    meeting_instigator = None;
+    meeting_date = None;

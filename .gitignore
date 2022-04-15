@@ -53,4 +53,6 @@ dkms.conf
 
 #cache files
 /AppClient/cache/
-/AppClient/utility/__pycache__
+/AppClient/cache/*
+/AppClient/utility/__pycache__/
+/AppClient/utility/__pycache__/*

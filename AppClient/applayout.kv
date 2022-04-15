@@ -328,9 +328,11 @@ Manager:
                 padding: 10
                 Label:
                     text: "Upcoming Meetings"
-                    size_hint: (1, .2)
+                    size_hint: (1, .1)
                 MeetingLayout:
                     id: upcoming_meetings
+                    app: app
+                    size_hint: (1, .9)
             Button:
                 text: "Create A Meeting"
                 font_size: 14

@@ -120,7 +120,7 @@ class LoginScreen(Screen):
         successful = False
 
         if valid_email and valid_password:
-            self.app.send_message("Email:" + user + ",Password:" + password)    
+            self.app.send_message("Email:" + user + ",Password:" + password)
             successful = True
         if valid_username and valid_password:
             self.app.send_message("Username:" + user + ",Password:" + password)
@@ -198,14 +198,11 @@ class Meet_in_the_MiddleApp(MDApp):
         kv = Builder.load_file('applayout.kv');
         return kv;
 
-
-
     #Server connectivity funtionality
     def connect_to_server(self):
         #Values will need to change when connecting to actual server
         reactor.connectTCP('localhost', 8000, EchoClientFactory(self))
 
-<<<<<<< Updated upstream
     def on_connection(self, connection):
             self.connection = connection
 
@@ -214,9 +211,6 @@ class Meet_in_the_MiddleApp(MDApp):
             self.connection.write(msg.encode('utf-8'))
 
 app = Meet_in_the_MiddleApp();
-
-=======
->>>>>>> Stashed changes
 if __name__ == '__main__':
     app.run();
 
