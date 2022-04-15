@@ -33,7 +33,8 @@ class MITMServerApp(App):
     # Initializing the server
     def build(self):
         self.label = Label(text="server started\n")
-        reactor.listenTCP(25565, MITMServerFactory(self))
+        #reactor.listenTCP(25565, MITMServerFactory(self))
+        reactor.listenTCP(8000, MITMServerFactory(self))
         return self.label
 
     def setup_gui(self):
@@ -49,7 +50,6 @@ class MITMServerApp(App):
     def handle_message(self, msg):
         msg = msg.decode('utf-8')
         self.label.text = "received:  {}\n".format(msg)
-
         # Checking for keywords from input
         if "auth_log" in msg.lower():
             self.print_message("Starting Login Process")
