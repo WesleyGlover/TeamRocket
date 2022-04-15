@@ -48,7 +48,7 @@ class MITMServerApp(App):
 
     # Handling the messages sent by the client
     def handle_message(self, msg):
-        msg = msg.decode('utf-8')
+        #msg = msg.decode('utf-8')
         self.label.text = "received:  {}\n".format(msg)
         # Checking for keywords from input
         if "auth_log" in msg.lower():

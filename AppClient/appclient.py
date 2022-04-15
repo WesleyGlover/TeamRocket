@@ -98,10 +98,6 @@ class EchoClientFactory(protocol.ClientFactory):
         #self.app.print_message('Connection failed.')
 ##End server classes
 
-#Global function for anyone to send message to server
-def send_message(app, msg):
-        if msg and app.connection:
-            app.connection.write(msg.encode('utf-8'))
 
 #define our screens (we have quite a few)
 class TitleScreen(Screen):
@@ -109,6 +105,14 @@ class TitleScreen(Screen):
 
 #Screen for when user already registered and wants to log in
 class LoginScreen(Screen):
+    #Function for when login button is clicked
+    #   1. Check if user inputted text
+    #       -Inform user to fill in fields
+    #   2. Check if user inputted valid text
+    #       -Inform user that username/password is incorrect
+    #   3. Check send valid text to server
+    #       -Inform user 
+    
     def login_button_onclick(self):
         #Get text input from text boxes
         user = self.ids.username_input.text
@@ -120,16 +124,18 @@ class LoginScreen(Screen):
         valid_password = input_validation.validate_password(password)
 
         successful = False
+        message = "login"
 
         if valid_email and valid_password:
             self.app.send_message("Email:" + user + ",Password:" + password)
             successful = True
-        if valid_username and valid_password:
+        elif valid_username and valid_password:
             self.app.send_message("Username:" + user + ",Password:" + password)
             successful = True
 
         if successful:
             print("yay")
+            #
             return
 
         print("nooo")
@@ -210,7 +216,8 @@ class Meet_in_the_MiddleApp(MDApp):
 
     def send_message(self, msg):
         if msg and self.connection:
-            self.connection.write(msg.encode('utf-8'))
+            msg = ["login", "username", "password"]
+            self.connection.write(bytes(msg))
 
 class ErrorMessage(MDCard):
     #Matt add any label changing functions here so that we can implement them for other error labels!
@@ -220,6 +227,7 @@ class ErrorMessage(MDCard):
     pass;
 
 app = Meet_in_the_MiddleApp();
+
 if __name__ == '__main__':
     app.run();
 
