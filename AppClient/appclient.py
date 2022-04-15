@@ -11,6 +11,8 @@ from kivy.uix.popup import Popup;
 from kivymd.app import MDApp;
 from kivymd.uix.behaviors import RoundedRectangularElevationBehavior;
 from kivymd.uix.card import MDCard;
+from kivymd.uix.label import MDLabel;
+
 
 class Card(MDCard, RoundedRectangularElevationBehavior):
     pass;
@@ -209,6 +211,13 @@ class Meet_in_the_MiddleApp(MDApp):
     def send_message(self, msg):
         if msg and self.connection:
             self.connection.write(msg.encode('utf-8'))
+
+class ErrorMessage(MDCard):
+    #Matt add any label changing functions here so that we can implement them for other error labels!
+    #change color and message
+    #color change md_bg_color attribute
+    #message change text attribute
+    pass;
 
 app = Meet_in_the_MiddleApp();
 if __name__ == '__main__':

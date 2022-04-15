@@ -59,6 +59,11 @@ Manager:
     background_normal: ''
     background_color: utils.get_color_from_hex(night_blue) #if app.mode == 'light' else utils.get_color_from_hex(night_blue)
     color: utils.get_color_from_hex(not_white)
+<ErrorMessage>
+    md_bg_color: utils.get_color_from_hex(dark_peach)
+    color: utils.get_color_from_hex(off_white)
+    elevation: 0
+
 
 #defaults for the stupid calender
 <MonthYearLabel>
@@ -146,7 +151,14 @@ Manager:
             #     Rectangle:
             #         size: self.size
             #         pos: self.pos
-
+            ErrorMessage:
+                id: login__error_message
+                text: ""
+                color: utils.get_color_from_hex(off_white)
+                size_hint: (1, .1)
+                font_size: 20
+                halign: "center"
+                valign: "center"
             Label:
                 text: "Username"
                 color: utils.get_color_from_hex(off_white)
@@ -220,6 +232,14 @@ Manager:
             size_hint: (1, .2)
         #animation goes here, but image for now
         Card:
+            ErrorMessage:
+                id: register_error_message
+                text: ""
+                color: utils.get_color_from_hex(off_white)
+                size_hint: (1, .1)
+                font_size: 20
+                halign: "center"
+                valign: "center"
             Label:
                 text: "Name"
                 color: utils.get_color_from_hex(off_white)
