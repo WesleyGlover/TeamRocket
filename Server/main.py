@@ -37,6 +37,7 @@ class MITMServerApp(App):
         reactor.listenTCP(8000, MITMServerFactory(self))
         return self.label
 
+
     def setup_gui(self):
         self.textbox = TextInput(size_hint_y=.1, multiline=False)
         self.textbox.bind(on_text_validate=self.send_message)
@@ -69,11 +70,26 @@ class MITMServerApp(App):
 
     # Defining the authentication function
     def auth_login(self, msg):
+
+        self.print_message('asdasdasdasdasdsad')
         self.print_message(f"Starting to parse: {msg}")
         d = msg.split(",")
         self.print_message(f"\nUsername: {d[1]}\nPassword: {d[2]}\n\n")
+        
+        connectionarr = self.database_auth()
+        cursor = connectionarr[0]
+        #connection = connectionarr[1]
 
+
+        cursor.execute("Select * From User where Username = '{}' and Password = '{}' ".format(d[1],d[2]))  
+        result = cursor.fetchall()
+        self.print_message(result)
+        if(result == []):
+            msg = "Return: False\n"
+        else:
+            msg = "Return: True\n"
         # Check the parsed phrases for exact matches in the file system.
+        '''
         if os.path.isfile("accounts.txt"):
             with open("accounts.txt", "r") as f:
                 r = f.read().split(",")
@@ -82,10 +98,10 @@ class MITMServerApp(App):
                     self.print_message(f"Found Username {d[1]} in the database")
                 else:
                     self.print_message(f"Username {d[1]} is not in the database")
-
+        '''
         # if d[1] not in users['Email'].unique():
         #   popFunc() --> Add this funtion to the client app side to review popups
-        msg = "Return: True\n"
+        
         return msg
 
     # Defining the registration function
@@ -109,10 +125,9 @@ class MITMServerApp(App):
 
         msg = "Registered!"
         return msg
-
     # DB Auth
 
-    def database_auth():
+    def database_auth(self):
         try:
             connection = mysql.connector.connect(
                 user='doadmin',
@@ -124,15 +139,12 @@ class MITMServerApp(App):
             print('\n[+] Connected to db-mysql-teamrocket-do-user-11106141-0.b.db.ondigitalocean.com Successfully')
 
             cursor = connection.cursor()
-            cursor.execute("Select * From User")
-            result = cursor.fetchall()
-            print("Output from query : Select * From User:")
-            print(type(result))
-            print(result, '\n')
+
+            obj = cursor, connection
             
+            return cursor, connection
         except BaseException as e:
             print(str(e))
-    database_auth()
-
+            
 if __name__ == '__main__':
     MITMServerApp().run()
