@@ -31,6 +31,7 @@ from twisted.internet import reactor, protocol
 
 #clear files from cache
 import os
+import json
 
 #For input validation
 from utility import input_validation
@@ -124,18 +125,20 @@ class LoginScreen(Screen):
         valid_password = input_validation.validate_password(password)
 
         successful = False
-        message = "login"
+        message = {'command': 'login'}
 
         if valid_email and valid_password:
-            self.app.send_message("Email:" + user + ",Password:" + password)
             successful = True
+            message['email'] = user
+            message['password'] = password       
         elif valid_username and valid_password:
-            self.app.send_message("Username:" + user + ",Password:" + password)
             successful = True
+            message['username'] = user
+            message['password'] = password       
+                  
 
         if successful:
-            print("yay")
-            #
+            self.app.send_message(message)
             return
 
         print("nooo")
@@ -216,8 +219,7 @@ class Meet_in_the_MiddleApp(MDApp):
 
     def send_message(self, msg):
         if msg and self.connection:
-            msg = ["login", "username", "password"]
-            self.connection.write(bytes(msg))
+            self.connection.write(json.dumps(msg).encode('utf-8'))
 
 class ErrorMessage(MDCard):
     #Matt add any label changing functions here so that we can implement them for other error labels!
