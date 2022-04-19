@@ -34,8 +34,7 @@ class MITMServerApp(App):
     # Initializing the server
     def build(self):
         self.label = Label(text="server started\n")
-        #reactor.listenTCP(25565, MITMServerFactory(self))
-        reactor.listenTCP(8000, MITMServerFactory(self))
+        reactor.listenTCP(25565, MITMServerFactory(self))
         return self.label
 
     def setup_gui(self):
@@ -72,7 +71,7 @@ class MITMServerApp(App):
 
     # Defining the authentication function
     def auth_login(self, msg):
-        
+
         # Check the parsed phrases for exact matches in the file system.
         if os.path.isfile("accounts.txt"):
             with open("accounts.txt", "r") as f:
@@ -99,7 +98,7 @@ class MITMServerApp(App):
                     response = "An account is already associated with the provided email"
                     self.print_message(response)
                     return response
-                    
+
         # Writing the new account to the database
         with open("accounts.txt", "w") as f:
             f.write(f"{msg['email']},{msg['username']},{msg['name']}")

@@ -112,8 +112,8 @@ class LoginScreen(Screen):
     #   2. Check if user inputted valid text
     #       -Inform user that username/password is incorrect
     #   3. Check send valid text to server
-    #       -Inform user 
-    
+    #       -Inform user
+
     def login_button_onclick(self):
         #Get text input from text boxes
         user = self.ids.username_input.text
@@ -130,12 +130,12 @@ class LoginScreen(Screen):
         if valid_email and valid_password:
             successful = True
             message['email'] = user
-            message['password'] = password       
+            message['password'] = password
         elif valid_username and valid_password:
             successful = True
             message['username'] = user
-            message['password'] = password       
-                  
+            message['password'] = password
+
 
         if successful:
             self.app.send_message(message)
@@ -212,7 +212,7 @@ class Meet_in_the_MiddleApp(MDApp):
     #Server connectivity funtionality
     def connect_to_server(self):
         #Values will need to change when connecting to actual server
-        reactor.connectTCP('localhost', 8000, EchoClientFactory(self))
+        reactor.connectTCP('localhost', 25565, EchoClientFactory(self))
 
     def on_connection(self, connection):
             self.connection = connection
