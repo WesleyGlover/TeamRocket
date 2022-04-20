@@ -85,7 +85,7 @@ def validate_username(username):
 #Output: True if valid, False if not.
 #Reference:
 #   https://pypi.org/project/py3-validate-email/
-def validate_email(email):
+def validate_email_address(email):
     
     #User py3-validate-email function 
     #Checks format is okay

@@ -120,7 +120,7 @@ class LoginScreen(Screen):
         password = self.ids.password_input.text
 
         #Check if user input was valid email
-        valid_email = input_validation.validate_email(user)
+        valid_email = input_validation.validate_email_address(user)
         valid_username = input_validation.validate_username(user)
         valid_password = input_validation.validate_password(password)
 
