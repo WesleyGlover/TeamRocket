@@ -89,12 +89,12 @@ class EchoClientFactory(protocol.ClientFactory):
         #self.app.print_message('Started to connect.')
 
     def clientConnectionLost(self, connector, reason):
-        print("Losr")
+        print("Lost connection:", reason)
         pass
         #self.app.print_message('Lost connection.')
 
     def clientConnectionFailed(self, connector, reason):
-        print("failure")
+        print("Connection failed:", reason)
         pass
         #self.app.print_message('Connection failed.')
 ##End server classes

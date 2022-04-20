@@ -91,7 +91,7 @@ def validate_email_address(email):
     #Checks format is okay
     #Checks if domain is on blacklist - spam emails
     #Checks if domain exists on DNS and has record 
-    valid = ve(email, check_smtp = False)
+    valid = ve(email, check_smtp=False)
 
     if valid:
         return True
