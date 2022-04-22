@@ -36,8 +36,8 @@ combAdd = [] #final list of qt locations with format: ['1234 Five ave/tx/denton'
 #Feed the states abbreviations into the url to get to that states page
 #To make this search every state for qt locations replace range(2): with range(0,len(stateAbList)) and {stateAbList[2]} with {stateAbList[i]}
 
-for i in range(0,1):
-    StateUrl = f"https://locations.quiktrip.com/{stateAbList[2]}"
+for i in range(0,len(stateAbList)):
+    StateUrl = f"https://locations.quiktrip.com/{stateAbList[i]}"
     page = requests.get(StateUrl).text
     doc = BeautifulSoup(page, "html.parser")
     cities = doc.find_all(class_="Directory-listLink")
