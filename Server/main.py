@@ -57,6 +57,7 @@ class MITMServerApp(App):
         if msg['command'] == "login":
             self.print_message("Starting Login Process")
             response = self.auth_login(msg)
+            self.print_message(f"Response: {response['Account Status']}")
 
         # Checking for registration
         if msg['command'] == "register":
@@ -64,28 +65,33 @@ class MITMServerApp(App):
             response = self.auth_regi(msg)
 
         self.label.text += "responded: {}\n".format(response)
-        return response.encode('utf-8')
+        return (json.dumps(response).encode('utf-8'))
+        
 
     def print_message(self, msg):
         self.label.text += "{}\n".format(msg)
 
     # Defining the authentication function
     def auth_login(self, msg):
+        # Setting up json message to send back
+        response = {'command': 'login'}
 
-        # Check the parsed phrases for exact matches in the file system.
+        # Connect to database Here to check for account
         if os.path.isfile("accounts.txt"):
             with open("accounts.txt", "r") as f:
                 r = f.read().split(",")
                 if msg["username"] in r:
                     # Username found, checking for password
                     self.print_message(f"Found Username {msg['username']} in the database")
+                    response['Account Status'] = "True"
+                elif msg["email"] in r:
+                    # Email found, Checking for password
+                    self.print_message(f"Found Email {msg['email']} in the database")
+                    response['Account Status'] = "True"
                 else:
-                    self.print_message(f"Username {msg['username']} is not in the database")
-
-        # if d[1] not in users['Email'].unique():
-        #   popFunc() --> Add this funtion to the client app side to review popups
-        msg = "Return: True\n"
-        return msg
+                    self.print_message(f"No account was found associated with Username/Email provided")
+                    response['Account Status'] = "False"
+        return response
 
     # Defining the registration function
     def auth_regi(self, msg):

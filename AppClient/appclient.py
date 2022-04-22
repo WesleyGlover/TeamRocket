@@ -66,7 +66,7 @@ egg_back = '#F2F2F2' #for light mode background
 
 
 #Classes for connecting to server complimentary of wesley
-class EchoClient(protocol.Protocol):
+class MTIMClient(protocol.Protocol):
     #we don't know if thing thing or not. Wesley look at this
     #self connection = connection
     def connectionMade(self):
@@ -78,8 +78,7 @@ class EchoClient(protocol.Protocol):
         #self.factory.app.print_message(data.decode('utf-8'))
 
 
-class EchoClientFactory(protocol.ClientFactory):
-    protocol = EchoClient
+class MITMClientFactory(protocol.ReconnectingClientFactory):
 
     def __init__(self, app):
         self.app = app
@@ -90,12 +89,12 @@ class EchoClientFactory(protocol.ClientFactory):
 
     def clientConnectionLost(self, connector, reason):
         print("Lost connection:", reason)
-        pass
+        protocol.ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
         #self.app.print_message('Lost connection.')
 
     def clientConnectionFailed(self, connector, reason):
         print("Connection failed:", reason)
-        pass
+        protocol.ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
         #self.app.print_message('Connection failed.')
 ##End server classes
 
@@ -129,11 +128,13 @@ class LoginScreen(Screen):
 
         if valid_email and valid_password:
             successful = True
+            message['username'] = None
             message['email'] = user
             message['password'] = password
         elif valid_username and valid_password:
             successful = True
             message['username'] = user
+            message['email'] = None
             message['password'] = password
 
 
@@ -212,7 +213,7 @@ class Meet_in_the_MiddleApp(MDApp):
     #Server connectivity funtionality
     def connect_to_server(self):
         #Values will need to change when connecting to actual server
-        reactor.connectTCP('localhost', 25565, EchoClientFactory(self))
+        reactor.connectTCP('localhost', 25565, MITMClientFactory(self))
 
     def on_connection(self, connection):
             self.connection = connection
