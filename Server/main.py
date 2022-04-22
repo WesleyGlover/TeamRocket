@@ -13,6 +13,7 @@ from twisted.internet import reactor
 from twisted.internet import protocol
 
 
+# Class to handle the data sent from connection. Each instance is connection
 class MITMServer(protocol.Protocol):
     def dataReceived(self, data):
         response = self.factory.app.handle_message(data)
@@ -20,6 +21,7 @@ class MITMServer(protocol.Protocol):
             self.transport.write(response)
 
 
+# Factory class to initialize new connections as MITMServer classes
 class MITMServerFactory(protocol.Factory):
     protocol = MITMServer
 
@@ -27,6 +29,7 @@ class MITMServerFactory(protocol.Factory):
         self.app = app
 
 
+# App that runs it all
 class MITMServerApp(App):
     label = None
     textbox = None
@@ -37,6 +40,7 @@ class MITMServerApp(App):
         self.listen_for_client()
         return root
 
+    # Setting up the gui
     def setup_gui(self):
         self.textbox = TextInput(size_hint_y=.1, multiline=False)
         self.textbox.bind(on_text_validate=self.send_message)
@@ -46,9 +50,11 @@ class MITMServerApp(App):
         layout.add_widget(self.textbox)
         return layout
 
+    # Waiting for client connection
     def listen_for_client(self):
         reactor.listenTCP(25565, MITMServerFactory(self))
 
+    # Taking input from console line and processing it locally on server
     def send_message(self, *args):
         msg = self.textbox.text
         if msg:
@@ -74,9 +80,14 @@ class MITMServerApp(App):
             self.print_message("Starting Registration Process")
             response = self.auth_regi(msg)
 
+        # Checking for Creation of new meeting
+        if msg['command'] == 'create_meeting':
+            self.print_message("Starting New Meeting")
+
         self.label.text += "responded: {}\n".format(response)
         return (json.dumps(response).encode('utf-8'))
 
+    # Print message to console on server
     def print_message(self, msg):
         self.label.text += "{}\n".format(msg)
 
@@ -120,6 +131,14 @@ class MITMServerApp(App):
 
         msg = "Registered!"
         return msg
+
+    # Defining the new meeting creation function
+    def new_meeting(self, msg):
+        # Make new table entry in database
+        # add user information from given login
+        # Find other user and send invite by adding it to table in database
+            # This may require on login/ random refresh for users to check for any invites.
+        self.print_message("Inside new_meeting Function")
 
 
 
