@@ -2,6 +2,10 @@
 from kivy.support import install_twisted_reactor
 import os
 import json
+from kivy.app import App
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.boxlayout import BoxLayout
 
 install_twisted_reactor()
 
@@ -23,19 +27,15 @@ class MITMServerFactory(protocol.Factory):
         self.app = app
 
 
-from kivy.app import App
-from kivy.uix.label import Label
-
-
 class MITMServerApp(App):
     label = None
     textbox = None
 
     # Initializing the server
     def build(self):
-        self.label = Label(text="server started\n")
-        reactor.listenTCP(25565, MITMServerFactory(self))
-        return self.label
+        root = self.setup_gui()
+        self.listen_for_client()
+        return root
 
     def setup_gui(self):
         self.textbox = TextInput(size_hint_y=.1, multiline=False)
@@ -46,10 +46,20 @@ class MITMServerApp(App):
         layout.add_widget(self.textbox)
         return layout
 
+    def listen_for_client(self):
+        reactor.listenTCP(25565, MITMServerFactory(self))
+
+    def send_message(self, *args):
+        msg = self.textbox.text
+        if msg:
+            self.print_message(f"{msg}")
+            self.textbox.text = ""
+            return (msg.encode('utf-8'))
+
     # Handling the messages sent by the client
     def handle_message(self, msg):
         msg = msg.decode('utf-8')
-        self.label.text = "received:  {}\n".format(msg)
+        self.print_message("\nreceived:  {}\n".format(msg))
         msg = json.loads(msg)
         response = "failure"
 
@@ -66,7 +76,6 @@ class MITMServerApp(App):
 
         self.label.text += "responded: {}\n".format(response)
         return (json.dumps(response).encode('utf-8'))
-        
 
     def print_message(self, msg):
         self.label.text += "{}\n".format(msg)

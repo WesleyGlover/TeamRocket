@@ -66,9 +66,9 @@ egg_back = '#F2F2F2' #for light mode background
 
 
 #Classes for connecting to server complimentary of wesley
-class MTIMClient(protocol.Protocol):
+class MITMClient(protocol.Protocol):
     #we don't know if thing thing or not. Wesley look at this
-    #self connection = connection
+    # self connection = connection
     def connectionMade(self):
         self.factory.app.on_connection(self.transport)
 
@@ -79,9 +79,17 @@ class MTIMClient(protocol.Protocol):
 
 
 class MITMClientFactory(protocol.ReconnectingClientFactory):
+    protocol = MITMClient
 
     def __init__(self, app):
         self.app = app
+
+    # # This needs to be fixed. Need to include a resetDelay function in build
+    # def buildProtocol(self, addr):
+    #     self.resetDelay()
+    #     f = MITMClient
+    #     f.factory = self
+    #     return f
 
     def startedConnecting(self, connector):
         pass
@@ -219,7 +227,10 @@ class Meet_in_the_MiddleApp(MDApp):
             self.connection = connection
 
     def send_message(self, msg):
+        print(f"Attempting to send message: {msg}")
+        print(f"Connection: {self.connection}")
         if msg and self.connection:
+            print(f"Sending message")
             self.connection.write(json.dumps(msg).encode('utf-8'))
 
 class ErrorMessage(MDCard):
