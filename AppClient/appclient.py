@@ -28,6 +28,7 @@ from utility import MeetingLayout
 from kivy.support import install_twisted_reactor
 install_twisted_reactor()
 from twisted.internet import reactor, protocol
+from socket import gethostbyname
 
 #clear files from cache
 import os
@@ -221,7 +222,8 @@ class Meet_in_the_MiddleApp(MDApp):
     #Server connectivity funtionality
     def connect_to_server(self):
         #Values will need to change when connecting to actual server
-        reactor.connectTCP('localhost', 25565, MITMClientFactory(self))
+        ip_address = gethostbyname("meetmehalfwayserver.ddns.net")
+        reactor.connectTCP(ip_address, 25565, MITMClientFactory(self))
 
     def on_connection(self, connection):
             self.connection = connection
