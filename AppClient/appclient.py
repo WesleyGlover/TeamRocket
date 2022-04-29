@@ -37,6 +37,11 @@ import json
 #For input validation
 from utility import input_validation
 
+#For sending requests for meeting updates
+import threading
+import time
+
+
 #constants
 #colors for app elements
 #text font colors
@@ -75,8 +80,50 @@ class MITMClient(protocol.Protocol):
 
     #Return response from server
     def dataReceived(self, data):
-        pass
-        #self.factory.app.print_message(data.decode('utf-8'))
+        app = self.factory.app
+        msg = data.decode('utf-8')
+        print(msg)
+        msg = json.loads(msg)
+        current = app.root.current
+        screen = app.root.current_screen
+
+        if msg['command'] == 'auth_login':
+            if current != 'login':
+                return
+
+            if msg['result'] == 'success':
+                app.root.current = 'home'
+                app.meetings_pinger.start()
+                return
+            else:
+                screen.error_message("Username or Password is incorrect")
+                return
+
+
+        if msg['command'] == 'auth_register':
+            if current != 'register':
+                return
+
+            if msg['result'] == 'username_exists':
+                screen.error_message("Username already taken")
+                return
+            elif msg['result'] == 'email_exists':
+                screen.error_message("Email already used")
+                return 
+            elif msg['result'] == 'success':
+                app.root.current = 'home'
+                app.meetings_pinger.start()
+                return
+            else:
+                screen.error_message("Error authenticating user registration")
+                return
+
+        if msg['command'] == 'user_meetings':
+            app.meetings = msg['meetings']
+            print(app.meetings)
+            return
+        
+
 
 
 class MITMClientFactory(protocol.ReconnectingClientFactory):
@@ -122,6 +169,9 @@ class LoginScreen(Screen):
     #   3. Check send valid text to server
     #       -Inform user
 
+    def error_message(self, msg):
+        self.ids.login_error_message.setActive(msg)
+
     def login_button_onclick(self):
         #Get text input from text boxes
         user = self.ids.username_input.text
@@ -150,11 +200,52 @@ class LoginScreen(Screen):
         if successful:
             self.app.send_message(message)
             return
-
-        print("nooo")
+    
+        self.error_message("Username or Password is incorrect")
 
 class RegisterScreen(Screen):
-    pass;
+    def error_message(self, msg):
+        self.ids.register_error_message.setActive(msg)
+
+    def register_button_onclick(self):
+        #Get text input from text boxes
+        name = self.ids.register_name_input.text
+        email = self.ids.register_email_input.text
+        username = self.ids.register_username_input.text
+        password = self.ids.register_password_input.text
+        repassword = self.ids.register_repassword_input.text
+
+        #Check if user input was valid email
+        valid_name = input_validation.validate_name(name)
+        valid_email = input_validation.validate_email_address(email)
+        valid_username = input_validation.validate_username(username)
+        valid_password = input_validation.validate_password(password)
+
+        if valid_name == False: 
+            self.error_message("Name does not fit the correct format")
+            return
+        
+        if valid_email == False:
+            self.error_message("Email must be a valid email address")
+            return
+
+        if valid_username == False:
+            self.error_message("Username does not fit the correct format")
+            return
+
+        if password != repassword:
+            self.error_message("Passwords do not match")
+            return
+
+        if valid_password == False:
+            self.error_message("Password does not meet security requirements.")
+            return
+
+        
+        message = {'command': 'register', 'name': name, 'email': email, 'username': username, 'password': password }
+        self.app.send_message(message)
+        return
+
 class HomeScreen(Screen):
     def get_user_lat(self):
         app = Nominatim(user_agent="MITM")
@@ -201,6 +292,7 @@ Window.size = (900/2, 1600/2);
 
 class Meet_in_the_MiddleApp(MDApp):
     connection = None
+    meetings = {}   #List of user's meetings. Accessible from anywhere
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs);
@@ -214,6 +306,8 @@ class Meet_in_the_MiddleApp(MDApp):
         for f in os.listdir(dir):
             os.remove(os.path.join(dir, f))
 
+        self.meetings_pinger = threading.Thread(target=self.ping_user_meetings)
+
     def build(self):
         self.connect_to_server() #For server
         kv = Builder.load_file('applayout.kv');
@@ -224,7 +318,7 @@ class Meet_in_the_MiddleApp(MDApp):
         #Values will need to change when connecting to actual server
         ip_address = gethostbyname("meetmehalfwayserver.ddns.net")
         reactor.connectTCP(ip_address, 25565, MITMClientFactory(self))
-
+        #reactor.connectTCP('localhost', 8000, MITMClientFactory(self))
     def on_connection(self, connection):
             self.connection = connection
 
@@ -235,17 +329,46 @@ class Meet_in_the_MiddleApp(MDApp):
             print(f"Sending message")
             self.connection.write(json.dumps(msg).encode('utf-8'))
 
-class ErrorMessage(MDCard):
+    def ping_user_meetings(self):
+        while True:
+            msg = {'command': 'ping_meetings'}
+            self.send_message(msg)
+            time.sleep(10)
+
+    def on_stop(self):
+        reactor.disconnect()
+        print("stopping")
+        self.meetings_pinger.join()
+
+class ErrorMessage(MDLabel):
+    errorColor = utils.get_color_from_hex(apple_red)
+    blankColor = utils.get_color_from_hex(off_white)
+
+    def setActive(self, message):
+        self.text = message
+        self.color = self.blankColor
+        self.md_bg_color = self.errorColor
+
+        pass
+
+    def setInactive(self):
+        self.text = ""
+        self.color = self.blankColor
+        pass
+
     #Matt add any label changing functions here so that we can implement them for other error labels!
     #change color and message
     #color change md_bg_color attribute
     #message change text attribute
     pass;
 
+
+
 app = Meet_in_the_MiddleApp();
+
 
 if __name__ == '__main__':
     app.run();
-
+app.on_stop()
 #settings_file.write();
 #settings_file.close();

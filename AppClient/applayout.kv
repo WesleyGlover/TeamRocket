@@ -61,7 +61,6 @@ Manager:
     color: utils.get_color_from_hex(not_white)
 <ErrorMessage>
     md_bg_color: utils.get_color_from_hex(dark_peach)
-    color: utils.get_color_from_hex(off_white)
     elevation: 0
 
 
@@ -152,11 +151,10 @@ Manager:
             #         size: self.size
             #         pos: self.pos
             ErrorMessage:
-                id: login__error_message
-                text: ""
-                color: utils.get_color_from_hex(off_white)
+                id: login_error_message
                 size_hint: (1, .1)
                 font_size: 20
+                text: ""
                 halign: "center"
                 valign: "center"
             Label:
@@ -207,7 +205,7 @@ Manager:
 
 <RegisterScreen>
     name: "register"
-
+    app: app
     BoxLayout:
         Label: #will become an image once I make the logo
             text: 'M'
@@ -302,6 +300,7 @@ Manager:
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
                 multiline: False
+                password: True
             Button:
                 text: "Register"
                 font_size: 20
@@ -309,7 +308,7 @@ Manager:
                 size_hint: (.5, .2)
 
                 #there should be validation and stuff, but for now we just go to the home screen
-                on_press: app.root.current = "home"
+                on_press: root.register_button_onclick();
 
 <HomeScreen>
     name: "home"
