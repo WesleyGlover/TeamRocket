@@ -61,7 +61,6 @@ Manager:
     color: utils.get_color_from_hex(not_white)
 <ErrorMessage>
     md_bg_color: utils.get_color_from_hex(dark_peach)
-    color: utils.get_color_from_hex(off_white)
     elevation: 0
 
 
@@ -152,11 +151,10 @@ Manager:
             #         size: self.size
             #         pos: self.pos
             ErrorMessage:
-                id: login__error_message
-                text: ""
-                color: utils.get_color_from_hex(off_white)
+                id: login_error_message
                 size_hint: (1, .1)
                 font_size: 20
+                text: ""
                 halign: "center"
                 valign: "center"
             Label:
@@ -207,7 +205,7 @@ Manager:
 
 <RegisterScreen>
     name: "register"
-
+    app: app
     BoxLayout:
         Label: #will become an image once I make the logo
             text: 'M'
@@ -302,6 +300,7 @@ Manager:
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
                 multiline: False
+                password: True
             Button:
                 text: "Register"
                 font_size: 20
@@ -309,7 +308,7 @@ Manager:
                 size_hint: (.5, .2)
 
                 #there should be validation and stuff, but for now we just go to the home screen
-                on_press: app.root.current = "home"
+                on_press: root.register_button_onclick();
 
 <HomeScreen>
     name: "home"
@@ -429,15 +428,59 @@ Manager:
                 color: utils.get_color_from_hex(soft_black)
             Label:
                 size_hint: (.2, 1)
-        MapView: #this map will show the possible locations based on the criteria layed out
-            id: create_meeting_map
-            lat: 33.218850
-            lon: -97.146090
-            zoom: 10
+        # MapView: #this map will show the possible locations based on the criteria layed out
+        #     id: create_meeting_map
+        #     lat: 33.218850
+        #     lon: -97.146090
+        #     zoom: 10
         BoxLayout:
-            # Image: #map again
-            #     source: 'images/mexico_map.jpg'
-
+            Label:
+                text: "Send Invite To?"
+                size_hint: (1, .1)
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            TextInput:
+                id: invited_user
+            Label:
+                text: "Meeting Date and Time"
+                size_hint: (1, .1)
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            GridLayout:
+                cols: 2
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                Button:
+                    text: "Date Picker"
+                    on_press: root.show_date_picker();
+                Label:
+                    text: "mm/dd/yy"
+                Button:
+                    text: "Time Picker"
+                    on_press: root.show_time_picker();
+                Label:
+                    text: "hh:mm"
+            Label:
+                text: "Location Filters"
+                size_hint: (1, .1)
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
             GridLayout:
                 cols: 2
                 canvas.before:
@@ -474,10 +517,10 @@ Manager:
 
 
             Button:
-                text: "Location Info"
+                text: "Send Request"
                 size_hint: (.6, .3)
                 pos_hint: {"center_x": .5}
-                #on_press: #open the information for the location as a pop up
+                #on_press: #send that request to the server baby!
 
 <SettingsScreen>
     name: "settings"

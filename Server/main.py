@@ -138,6 +138,11 @@ class MITMServerApp(App):
         # add user information from given login
         # Find other user and send invite by adding it to table in database
             # This may require on login/ random refresh for users to check for any invites.
+        # Here is what we want passed to server
+            # datetime
+            # Locations filters
+            # User invited
+            # user ID (for location finding in DB)
         self.print_message("Inside new_meeting Function")
 
 
