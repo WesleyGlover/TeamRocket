@@ -428,15 +428,59 @@ Manager:
                 color: utils.get_color_from_hex(soft_black)
             Label:
                 size_hint: (.2, 1)
-        MapView: #this map will show the possible locations based on the criteria layed out
-            id: create_meeting_map
-            lat: 33.218850
-            lon: -97.146090
-            zoom: 10
+        # MapView: #this map will show the possible locations based on the criteria layed out
+        #     id: create_meeting_map
+        #     lat: 33.218850
+        #     lon: -97.146090
+        #     zoom: 10
         BoxLayout:
-            # Image: #map again
-            #     source: 'images/mexico_map.jpg'
-
+            Label:
+                text: "Send Invite To?"
+                size_hint: (1, .1)
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            TextInput:
+                id: invited_user
+            Label:
+                text: "Meeting Date and Time"
+                size_hint: (1, .1)
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            GridLayout:
+                cols: 2
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                Button:
+                    text: "Date Picker"
+                    on_press: root.show_date_picker();
+                Label:
+                    text: "mm/dd/yy"
+                Button:
+                    text: "Time Picker"
+                    on_press: root.show_time_picker();
+                Label:
+                    text: "hh:mm"
+            Label:
+                text: "Location Filters"
+                size_hint: (1, .1)
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex(dark_peach)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
             GridLayout:
                 cols: 2
                 canvas.before:
@@ -473,10 +517,10 @@ Manager:
 
 
             Button:
-                text: "Location Info"
+                text: "Send Request"
                 size_hint: (.6, .3)
                 pos_hint: {"center_x": .5}
-                #on_press: #open the information for the location as a pop up
+                #on_press: #send that request to the server baby!
 
 <SettingsScreen>
     name: "settings"

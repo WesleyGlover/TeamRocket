@@ -52,6 +52,8 @@ Mkfile.old
 dkms.conf
 
 #cache files
+/Server/__pycache__/
+/Server/__pycache__/*
 /AppClient/cache/*
 /AppClient/utility/__pycache__/
 /AppClient/utility/__pycache__/*

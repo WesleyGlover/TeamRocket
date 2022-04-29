@@ -12,6 +12,8 @@ from kivymd.app import MDApp;
 from kivymd.uix.behaviors import RoundedRectangularElevationBehavior;
 from kivymd.uix.card import MDCard;
 from kivymd.uix.label import MDLabel;
+from kivymd.uix.picker import MDTimePicker;
+from kivymd.uix.picker import MDDatePicker;
 
 
 class Card(MDCard, RoundedRectangularElevationBehavior):
@@ -268,7 +270,16 @@ class HomeScreen(Screen):
 class MeetingInfoScreen(Screen):
     pass;
 class CreateMeetingScreen(Screen):
-    pass;
+    time = None;
+    date = None;
+
+    def show_date_picker(self):
+        date_dialog = MDDatePicker()
+        date_dialog.open()
+    def show_time_picker(self):
+        time_dialog = MDTimePicker()
+        time_dialog.open()
+
 class SettingsScreen(Screen):
     pass;
 class CalenderScreen(Screen):
