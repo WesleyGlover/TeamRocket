@@ -14,6 +14,8 @@ from kivymd.uix.card import MDCard;
 from kivymd.uix.label import MDLabel;
 from kivymd.uix.picker import MDTimePicker;
 from kivymd.uix.picker import MDDatePicker;
+from kivymd.uix.textfield import MDTextField;
+from kivymd.uix.button import MDFlatButton, MDRaisedButton;
 
 
 class Card(MDCard, RoundedRectangularElevationBehavior):
@@ -117,7 +119,7 @@ class MITMClient(protocol.Protocol):
                 return
             elif msg['result'] == 'email_exists':
                 screen.error_message("Email already used")
-                return 
+                return
             elif msg['result'] == 'success':
                 app.root.current = 'home'
                 app.meetings_pinger.start()
@@ -138,7 +140,7 @@ class MITMClient(protocol.Protocol):
         if msg['command'] == 'receive_meeting_invite':
             return
 
-        
+
 
 
 
@@ -216,7 +218,7 @@ class LoginScreen(Screen):
         if successful:
             self.app.send_message(message)
             return
-    
+
         self.error_message("Username or Password is incorrect")
 
 class RegisterScreen(Screen):
@@ -237,16 +239,16 @@ class RegisterScreen(Screen):
         valid_username = input_validation.validate_username(username)
         valid_password = input_validation.validate_password(password)
 
-        if valid_name == False: 
-            self.error_message("Name does not fit the correct format")
+        if valid_name == False:
+            self.error_message("Name is not the correct format")
             return
-        
+
         if valid_email == False:
             self.error_message("Email must be a valid email address")
             return
 
         if valid_username == False:
-            self.error_message("Username does not fit the correct format")
+            self.error_message("Username is not the correct format")
             return
 
         if password != repassword:
@@ -254,10 +256,10 @@ class RegisterScreen(Screen):
             return
 
         if valid_password == False:
-            self.error_message("Password does not meet security requirements.")
+            self.error_message("Password does not meet security requirements")
             return
 
-        
+
         message = {'command': 'register', 'name': name, 'email': email, 'username': username, 'password': password }
         self.app.send_message(message)
         return

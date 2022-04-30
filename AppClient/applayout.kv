@@ -50,18 +50,26 @@ Manager:
     orientation: "vertical"
     size: root.width, root.height
 
+    border_radius: 30
     style: "elevated"
-    elevation: 30
-    md_bg_color: utils.get_color_from_hex(dark_peach)
+    elevation: 20
     padding: 30
     spacing: 10
-<Button>
-    background_normal: ''
-    background_color: utils.get_color_from_hex(night_blue) #if app.mode == 'light' else utils.get_color_from_hex(night_blue)
-    color: utils.get_color_from_hex(not_white)
+<MDFlatButton>
+    text_color: utils.get_color_from_hex(night_blue)
+<MDRaisedButton>
+    theme_text_color: "Custom"
+    text_color: utils.get_color_from_hex(not_white)
+    md_bg_color: utils.get_color_from_hex(night_blue)
+<MDTextField>
+    helper_text_mode: "on_error"
+    helper_text: "Enter Text"
+    color_mode: 'custom'
+    line_color_focus: utils.get_color_from_hex(dark_peach)
 <ErrorMessage>
-    md_bg_color: utils.get_color_from_hex(dark_peach)
+    md_bg_color: utils.get_color_from_hex(off_white)
     elevation: 0
+    padding: (0, 20)
 
 
 #defaults for the stupid calender
@@ -110,19 +118,12 @@ Manager:
         Label:
             id: animate_me
             size: 0, 20
-        Label:
+        MDFlatButton: #temp while i figure out touch events should be a Label
             id: accredation
             text: "App by TeamRocket"
-            color: utils.get_color_from_hex(soft_black)
             font_size: 16
             pos_hint: {'center_x': 0.5}
             size_hint: (.2, .2)
-
-        Button: #temp while i figure out touch events
-            text: "login screen"
-            font_size: 16
-            pos_hint: {'center_x': .5}
-            size_hint: (.3, .1)
             on_press: app.root.current = "login"
 
     #on_touch_down: app.root.current = "login"
@@ -144,12 +145,8 @@ Manager:
             size_hint: (1, .5)
         #animation goes here, but image for now
         Card:
-            # canvas.before:
-            #     Color:
-            #         rgba: utils.get_color_from_hex(dark_peach)
-            #     Rectangle:
-            #         size: self.size
-            #         pos: self.pos
+            md_bg_color: utils.get_color_from_hex(off_white)
+
             ErrorMessage:
                 id: login_error_message
                 size_hint: (1, .1)
@@ -157,46 +154,42 @@ Manager:
                 text: ""
                 halign: "center"
                 valign: "center"
-            Label:
-                text: "Username"
-                color: utils.get_color_from_hex(off_white)
-                font_size: 20
-                pos_hint: {'center_x': .5, 'center_y': .7}
-                size_hint: (.7, .2)
-            TextInput:
+            MDTextField:
                 id: username_input
+                hint_text: "Username"
+                required: True
+
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
                 multiline: False
-            Label:
-                text: "Password"
-                color: utils.get_color_from_hex(off_white)
-                font_size: 20
-                pos_hint: {'center_x': .5, 'center_y': .7}
-                size_hint: (.7, .2)
-            TextInput:
+                write_tab: False
+            MDTextField:
                 id: password_input
+                hint_text: "Password"
+                required: True
+                password: True
+                password_mask: '•'
+
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
                 multiline: False
-                password: True
-            Button:
-                background_color: utils.get_color_from_hex(dark_peach)
+                write_tab: False
+            MDFlatButton:
                 text: "Forgot Your Password?"
-                color: utils.get_color_from_hex(off_white)
+                color: utils.get_color_from_hex(soft_black)
                 font_size: 12
                 pos_hint: {'center_x': .5, 'center_y': .2}
                 size_hint: (.4, .1)
                 #on_press: #nothing for now
-            Button:
+            MDRaisedButton:
                 text: "Login"
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.5, .2)
                 on_press: root.login_button_onclick(); #app.root.current = "home" #should do validation though
-        Button: #temp while i figure out touch events
+        MDFlatButton: #temp while i figure out touch events
             text: "Register"
             font_size: 16
             pos_hint: {'center_x': .5}
@@ -238,70 +231,66 @@ Manager:
                 font_size: 20
                 halign: "center"
                 valign: "center"
-            Label:
-                text: "Name"
-                color: utils.get_color_from_hex(off_white)
-                font_size: 20
-                pos_hint: {'center_x': .5, 'center_y': .7}
-                size_hint: (.7, .2)
-            TextInput:
+            MDTextField:
                 id: register_name_input
+                hint_text: "Name"
+                required: True
+
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
                 multiline: False
-            Label:
-                text: "Email"
-                color: utils.get_color_from_hex(off_white)
-                font_size: 20
-                pos_hint: {'center_x': .5, 'center_y': .7}
-                size_hint: (.7, .2)
-            TextInput:
+                write_tab: False
+                text_size: root.width * .75, root.height * .75
+            MDTextField:
                 id: register_email_input
+                hint_text: "Email"
+                required: True
+
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
                 multiline: False
-            Label:
-                text: "Username"
-                color: utils.get_color_from_hex(off_white)
-                font_size: 20
-                pos_hint: {'center_x': .5, 'center_y': .7}
-                size_hint: (.7, .2)
-            TextInput:
+                write_tab: False
+                text_size: root.width * .75, root.height * .75
+            MDTextField:
                 id: register_username_input
+                hint_text: "Username"
+                required: True
+
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
                 multiline: False
-            Label:
-                text: "Password"
-                color: utils.get_color_from_hex(off_white)
-                font_size: 20
-                pos_hint: {'center_x': .5, 'center_y': .7}
-                size_hint: (.7, .2)
-                password: True
-            TextInput:
+                write_tab: False
+                text_size: root.width * .75, root.height * .75
+            MDTextField:
                 id: register_password_input
+                hint_text: "Password"
+                required: True
+
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
                 multiline: False
                 password: True
-            Label:
-                text: "Re-enter Password"
-                color: utils.get_color_from_hex(off_white)
-                font_size: 20
-                pos_hint: {'center_x': .5, 'center_y': .7}
-                size_hint: (.7, .2)
-            TextInput:
+                password_mask: '•'
+                write_tab: False
+                text_size: root.width * .75, root.height * .75
+            MDTextField:
                 id: register_repassword_input
+                hint_text: "Re-enter Password"
+                required: True
+
                 font_size: 20
                 pos_hint: {'center_x': .5}
                 size_hint: (.7, .2)
                 multiline: False
                 password: True
-            Button:
+                password_mask: '•'
+                write_tab: False
+                text_size: root.width * .75, root.height * .75
+            MDRaisedButton:
                 text: "Register"
                 font_size: 20
                 pos_hint: {'center_x': .5}
