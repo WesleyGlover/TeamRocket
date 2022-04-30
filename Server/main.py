@@ -6,6 +6,7 @@ from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
+import mysql.connector
 
 install_twisted_reactor()
 
@@ -33,6 +34,29 @@ class MITMServerFactory(protocol.Factory):
 class MITMServerApp(App):
     label = None
     textbox = None
+
+    #Connecting to db. Cursor is used to query the db. connection is for commiting a edit to the db
+    def database_auth():
+            try:
+                connection = mysql.connector.connect(
+                    user='doadmin',
+                    password ='AVNS_WZEScW_Y5FNKr7m',
+                    host='db-mysql-teamrocket-do-user-11106141-0.b.db.ondigitalocean.com',
+                    port = 25060,
+                    database='defaultdb'
+                )
+                print('\n[+] Connected to db-mysql-teamrocket-do-user-11106141-0.b.db.ondigitalocean.com Successfully')
+
+                cursor = connection.cursor()
+
+                return cursor, connection
+            except BaseException as e:
+                print(str(e))
+    # Databse Connection vars. connectionarray holds variables to query and modify db
+
+    connectorarr = database_auth()
+    cursor = connectorarr[0]
+    connection = connectorarr[1]
 
     # Initializing the server
     def build(self):
@@ -73,7 +97,7 @@ class MITMServerApp(App):
         if msg['command'] == "login":
             self.print_message("Starting Login Process")
             response = self.auth_login(msg)
-            self.print_message(f"Response: {response['Account Status']}")
+            self.print_message(f"Response: {response['result']}")
 
         # Checking for registration
         if msg['command'] == "register":
@@ -94,43 +118,43 @@ class MITMServerApp(App):
     # Defining the authentication function
     def auth_login(self, msg):
         # Setting up json message to send back
-        response = {'command': 'login'}
+        response = {'command': 'auth_login'}
 
-        # Connect to database Here to check for account
-        if os.path.isfile("accounts.txt"):
-            with open("accounts.txt", "r") as f:
-                r = f.read().split(",")
-                if msg["username"] in r:
-                    # Username found, checking for password
-                    self.print_message(f"Found Username {msg['username']} in the database")
-                    response['Account Status'] = "True"
-                elif msg["email"] in r:
-                    # Email found, Checking for password
-                    self.print_message(f"Found Email {msg['email']} in the database")
-                    response['Account Status'] = "True"
-                else:
-                    self.print_message(f"No account was found associated with Username/Email provided")
-                    response['Account Status'] = "False"
+        self.cursor.execute("Select * From User where Username = '{}' and Password = '{}' ".format(msg['username'],msg['password']))
+        result = self.cursor.fetchall()
+        if(result == []):
+            response['result'] = "fail"
+        else:
+            response['result'] = "success"
         return response
 
     # Defining the registration function
     def auth_regi(self, msg):
+        response = {'command': 'auth_register'}
+        #TODO change * to username
+        self.cursor.execute("Select * From User where Username = '{}'".format(msg['username']))
+        result = self.cursor.fetchall()
+        self.print_message(result)
+        if(result != []):
+            response['result'] = "username_exists"
+            self.print_message(response)
+            return response
 
-        # Checking for pre-existing account by Email
-        if os.path.isfile("accounts.txt"):
-            with open("accounts.txt", "r") as f:
-                r = f.read().split(",")
-                if msg["email"] in r:
-                    response = "An account is already associated with the provided email"
-                    self.print_message(response)
-                    return response
+        self.cursor.execute("Select * From User where Email = '{}' ".format(msg['email']))
+        result = self.cursor.fetchall()
+        if(result != []):
+            response['result'] = "email_exists"
+            self.print_message(response)
+            return response
 
-        # Writing the new account to the database
-        with open("accounts.txt", "w") as f:
-            f.write(f"{msg['email']},{msg['username']},{msg['name']}")
 
-        msg = "Registered!"
-        return msg
+        sql = 'INSERT INTO User (Name, Email, Password, Username) VALUES (%s,%s,%s,%s)'
+        val = (msg['name'], msg['email'], msg['password'], msg['username'])
+        self.cursor.execute(sql,val)
+        self.connection.commit()
+        
+        response['result'] = "success"
+        return response
 
     # Defining the new meeting creation function
     def new_meeting(self, msg):
