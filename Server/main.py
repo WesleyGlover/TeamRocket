@@ -7,6 +7,10 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
 import mysql.connector
+from scipy.spatial import cKDTree
+from geographiclib.geodesic import Geodesic
+from math import radians, cos, sin, asin, sqrt, atan2, degrees
+from scipy import inf
 
 install_twisted_reactor()
 
@@ -107,6 +111,7 @@ class MITMServerApp(App):
         # Checking for Creation of new meeting
         if msg['command'] == 'create_meeting':
             self.print_message("Starting New Meeting")
+            self.new_meeting(msg)
 
         self.label.text += "responded: {}\n".format(response)
         return (json.dumps(response).encode('utf-8'))
@@ -152,7 +157,7 @@ class MITMServerApp(App):
         val = (msg['name'], msg['email'], msg['password'], msg['username'])
         self.cursor.execute(sql,val)
         self.connection.commit()
-        
+
         response['result'] = "success"
         return response
 
@@ -169,6 +174,39 @@ class MITMServerApp(App):
             # user ID (for location finding in DB)
         self.print_message("Inside new_meeting Function")
 
+    # Defining the new meeting creation function
+    def new_meeting(self, msg):
+        # Make new table entry in database
+        # add user information from given login
+        # Find other user and send invite by adding it to table in database
+            # This may require on login/ random refresh for users to check for any invites.
+        # Here is what we want passed to server
+            # datetime
+            # Locations filters
+            # User invited
+            # user ID (for location finding in DB)
+        self.print_message("Inside new_meeting Function")
+        # self.print_message(f"Meeting Instigater: {msg["meeting_instigator"]}")
+        # self.print_message(f"Meeting Partner: {msg["meeting_partner"]}")
+        # self.print_message(f"Instigater Location: {msg["instigator_location"]}")
+        # self.print_message(f"Date: {msg["date"]}")
+        # self.print_message(f"Time: {msg["time"]}")
+
+        # SQL Command to create a new meeting with these Item printed above
+            #
+
+    # This function gets the mid point between two locations
+    def findMidPoint(self, loc1X, loc1Y, loc2X, loc2Y):
+        # taking two users location and finding the mid point and returning it
+        l = Geodesic.WGS84.InverseLine(loc1X, loc1Y, loc2X, loc2Y)
+        m = l.Position(0.5 * l.s13)
+
+        # Creating json to return
+        midpoint = {'command': 'midpoint'}
+        midpoint['lat'] = m['lat2']
+        midpoint['lon'] = m['lon2']
+
+        return midpoint
 
 
 if __name__ == '__main__':
