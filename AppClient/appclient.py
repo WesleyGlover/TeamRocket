@@ -124,6 +124,10 @@ class MITMClient(protocol.Protocol):
             app.meetings = msg['meetings']
             print(app.meetings)
             return
+
+        if msg['command'] == 'receive_meeting_invite':
+            return
+
         
 
 
@@ -303,7 +307,7 @@ Window.size = (900/2, 1600/2);
 
 class Meet_in_the_MiddleApp(MDApp):
     connection = None
-    meetings = {}   #List of user's meetings. Accessible from anywhere
+    meetings = []   #List of user's meetings. Accessible from anywhere
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs);
@@ -318,6 +322,8 @@ class Meet_in_the_MiddleApp(MDApp):
             os.remove(os.path.join(dir, f))
 
         self.meetings_pinger = threading.Thread(target=self.ping_user_meetings)
+        self.end_thread = threading.Event()
+        self.running = True
 
     def build(self):
         self.connect_to_server() #For server
@@ -328,8 +334,8 @@ class Meet_in_the_MiddleApp(MDApp):
     def connect_to_server(self):
         #Values will need to change when connecting to actual server
         ip_address = gethostbyname("meetmehalfwayserver.ddns.net")
-        reactor.connectTCP(ip_address, 25565, MITMClientFactory(self))
-        #reactor.connectTCP('localhost', 8000, MITMClientFactory(self))
+        #reactor.connectTCP(ip_address, 25565, MITMClientFactory(self))
+        reactor.connectTCP('localhost', 8000, MITMClientFactory(self))
     def on_connection(self, connection):
             self.connection = connection
 
@@ -341,14 +347,16 @@ class Meet_in_the_MiddleApp(MDApp):
             self.connection.write(json.dumps(msg).encode('utf-8'))
 
     def ping_user_meetings(self):
-        while True:
+        while self.running:
             msg = {'command': 'ping_meetings'}
             self.send_message(msg)
-            time.sleep(10)
+            self.end_thread.wait(10)
 
     def on_stop(self):
-        reactor.disconnect()
+        #reactor.disconnect()
         print("stopping")
+        self.running = False
+        self.end_thread.set()
         self.meetings_pinger.join()
 
 class ErrorMessage(MDLabel):
@@ -366,12 +374,6 @@ class ErrorMessage(MDLabel):
         self.text = ""
         self.color = self.blankColor
         pass
-
-    #Matt add any label changing functions here so that we can implement them for other error labels!
-    #change color and message
-    #color change md_bg_color attribute
-    #message change text attribute
-    pass;
 
 
 
