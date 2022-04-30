@@ -123,8 +123,12 @@ class MITMClient(protocol.Protocol):
                 return
 
         if msg['command'] == 'user_meetings':
+            if app.meetings == msg['meetings']:
+                return
+
             app.meetings = msg['meetings']
-            print(app.meetings)
+            print(app.meetings)            
+            app.root.get_screen("home").ids.upcoming_meetings.update_meetings(app.meetings)
             return
 
         if msg['command'] == 'receive_meeting_invite':
@@ -273,8 +277,11 @@ class HomeScreen(Screen):
 
         return lon
 
+    
+
 class MeetingInfoScreen(Screen):
     pass;
+
 class CreateMeetingScreen(Screen):
     time = None;
     date = None;
@@ -336,8 +343,8 @@ class Meet_in_the_MiddleApp(MDApp):
     def connect_to_server(self):
         #Values will need to change when connecting to actual server
         ip_address = gethostbyname("meetmehalfwayserver.ddns.net")
-        #reactor.connectTCP(ip_address, 25565, MITMClientFactory(self))
-        reactor.connectTCP('localhost', 8000, MITMClientFactory(self))
+        reactor.connectTCP(ip_address, 25565, MITMClientFactory(self))
+        #reactor.connectTCP('localhost', 8000, MITMClientFactory(self))
     def on_connection(self, connection):
             self.connection = connection
 
