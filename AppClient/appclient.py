@@ -89,6 +89,12 @@ class MITMClient(protocol.Protocol):
         current = app.root.current
         screen = app.root.current_screen
 
+        if not isinstance(msg, dict):
+            return
+
+        if 'command' not in msg:
+            return 
+
         if msg['command'] == 'auth_login':
             if current != 'login':
                 return
