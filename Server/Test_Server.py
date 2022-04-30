@@ -58,13 +58,15 @@ class TwistedServerApp(App):
             self.print_message(f"{msg}")
             self.textbox.text = ""
             return (msg.encode('utf-8'))
+        else:
+            return json.dumps({'command': "none"}).encode('utf-8')
 
     def handle_message(self, msg):
         msg = msg.decode('utf-8')
         self.label.text = "received:  {}\n".format(msg)
 
         response = self.send_message()
-
+        
         self.label.text += "responded: {}\n".format(response)
         return response
 

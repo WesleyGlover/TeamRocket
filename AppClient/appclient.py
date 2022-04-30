@@ -14,6 +14,8 @@ from kivymd.uix.card import MDCard;
 from kivymd.uix.label import MDLabel;
 from kivymd.uix.picker import MDTimePicker;
 from kivymd.uix.picker import MDDatePicker;
+from kivymd.uix.textfield import MDTextField;
+from kivymd.uix.button import MDFlatButton, MDRaisedButton;
 
 
 class Card(MDCard, RoundedRectangularElevationBehavior):
@@ -111,7 +113,7 @@ class MITMClient(protocol.Protocol):
                 return
             elif msg['result'] == 'email_exists':
                 screen.error_message("Email already used")
-                return 
+                return
             elif msg['result'] == 'success':
                 app.root.current = 'home'
                 app.meetings_pinger.start()
@@ -121,10 +123,18 @@ class MITMClient(protocol.Protocol):
                 return
 
         if msg['command'] == 'user_meetings':
+            if app.meetings == msg['meetings']:
+                return
+
             app.meetings = msg['meetings']
-            print(app.meetings)
+            print(app.meetings)            
+            app.root.get_screen("home").ids.upcoming_meetings.update_meetings(app.meetings)
             return
-        
+
+        if msg['command'] == 'receive_meeting_invite':
+            return
+
+
 
 
 
@@ -202,7 +212,7 @@ class LoginScreen(Screen):
         if successful:
             self.app.send_message(message)
             return
-    
+
         self.error_message("Username or Password is incorrect")
 
 class RegisterScreen(Screen):
@@ -223,16 +233,16 @@ class RegisterScreen(Screen):
         valid_username = input_validation.validate_username(username)
         valid_password = input_validation.validate_password(password)
 
-        if valid_name == False: 
-            self.error_message("Name does not fit the correct format")
+        if valid_name == False:
+            self.error_message("Name is not the correct format")
             return
-        
+
         if valid_email == False:
             self.error_message("Email must be a valid email address")
             return
 
         if valid_username == False:
-            self.error_message("Username does not fit the correct format")
+            self.error_message("Username is not the correct format")
             return
 
         if password != repassword:
@@ -240,10 +250,10 @@ class RegisterScreen(Screen):
             return
 
         if valid_password == False:
-            self.error_message("Password does not meet security requirements.")
+            self.error_message("Password does not meet security requirements")
             return
 
-        
+
         message = {'command': 'register', 'name': name, 'email': email, 'username': username, 'password': password }
         self.app.send_message(message)
         return
@@ -267,8 +277,11 @@ class HomeScreen(Screen):
 
         return lon
 
+    
+
 class MeetingInfoScreen(Screen):
     pass;
+
 class CreateMeetingScreen(Screen):
     time = None;
     date = None;
@@ -303,7 +316,7 @@ Window.size = (900/2, 1600/2);
 
 class Meet_in_the_MiddleApp(MDApp):
     connection = None
-    meetings = {}   #List of user's meetings. Accessible from anywhere
+    meetings = []   #List of user's meetings. Accessible from anywhere
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs);
@@ -318,6 +331,8 @@ class Meet_in_the_MiddleApp(MDApp):
             os.remove(os.path.join(dir, f))
 
         self.meetings_pinger = threading.Thread(target=self.ping_user_meetings)
+        self.end_thread = threading.Event()
+        self.running = True
 
     def build(self):
         self.connect_to_server() #For server
@@ -341,14 +356,16 @@ class Meet_in_the_MiddleApp(MDApp):
             self.connection.write(json.dumps(msg).encode('utf-8'))
 
     def ping_user_meetings(self):
-        while True:
+        while self.running:
             msg = {'command': 'ping_meetings'}
             self.send_message(msg)
-            time.sleep(10)
+            self.end_thread.wait(10)
 
     def on_stop(self):
-        reactor.disconnect()
+        #reactor.disconnect()
         print("stopping")
+        self.running = False
+        self.end_thread.set()
         self.meetings_pinger.join()
 
 class ErrorMessage(MDLabel):
@@ -366,12 +383,6 @@ class ErrorMessage(MDLabel):
         self.text = ""
         self.color = self.blankColor
         pass
-
-    #Matt add any label changing functions here so that we can implement them for other error labels!
-    #change color and message
-    #color change md_bg_color attribute
-    #message change text attribute
-    pass;
 
 
 
