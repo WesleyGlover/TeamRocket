@@ -45,10 +45,12 @@ middle of nowhere) based on their needs (e.g., at a police station).
     `pip install KivyCalendar` (needs modification to be compatible with Python v3.0+) <br />
   Geopy: <br />
     `pip install geopy` <br />
-  Geocoder:
+  Geocoder:<br />
     `pip install geocoder` <br />
-  Py3-validate-email:
+  Py3-validate-email:<br />
     `pip install py3-validate-email` <br />
+  MySQL:<br />
+    `pip install mysql-connector-python` <br />
 
 "Updating" KivyCalendar: <br />
   here is a link to the guy who did it on stack overflow: https://stackoverflow.com/questions/48518358/getting-error-no-module-named-calendar-ui-even-though-kivycalendar-has-been
