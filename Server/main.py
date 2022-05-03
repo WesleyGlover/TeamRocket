@@ -80,7 +80,8 @@ class MITMServerApp(App):
 
     # Waiting for client connection
     def listen_for_client(self):
-        reactor.listenTCP(25565, MITMServerFactory(self))
+        #reactor.listenTCP(25565, MITMServerFactory(self))
+        reactor.listenTCP(8000, MITMServerFactory(self))
 
     # Taking input from console line and processing it locally on server
     def send_message(self, *args):

@@ -51,6 +51,8 @@ middle of nowhere) based on their needs (e.g., at a police station).
     `pip install py3-validate-email` <br />
   MySQL:<br />
     `pip install mysql-connector-python` <br />
+  Scipy:<br />
+    `pip install scipy` <br />
 
 "Updating" KivyCalendar: <br />
   here is a link to the guy who did it on stack overflow: https://stackoverflow.com/questions/48518358/getting-error-no-module-named-calendar-ui-even-though-kivycalendar-has-been

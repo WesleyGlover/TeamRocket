@@ -394,7 +394,7 @@ Manager:
 
 <CreateMeetingScreen>
     name: "create_meeting"
-
+    app: app
     GridLayout:
         cols: 1
 
@@ -504,7 +504,7 @@ Manager:
                 text: "Send Request"
                 size_hint: (.6, .3)
                 pos_hint: {"center_x": .5}
-                #on_press: #send that request to the server baby!
+                on_press: root.send_request_button_onclick(); app.root.current = "home";
 
 <SettingsScreen>
     name: "settings"
