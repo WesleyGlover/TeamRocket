@@ -2,6 +2,7 @@
 from kivy.support import install_twisted_reactor
 import os
 import json
+import random
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
@@ -38,7 +39,7 @@ class MITMServerFactory(protocol.Factory):
 class MITMServerApp(App):
     label = None
     textbox = None
-
+    
     #Connecting to db. Cursor is used to query the db. connection is for commiting a edit to the db
     def database_auth():
             try:
@@ -80,7 +81,8 @@ class MITMServerApp(App):
 
     # Waiting for client connection
     def listen_for_client(self):
-        reactor.listenTCP(25565, MITMServerFactory(self))
+        #reactor.listenTCP(25565, MITMServerFactory(self))
+        reactor.listenTCP(8000, MITMServerFactory(self))
 
     # Taking input from console line and processing it locally on server
     def send_message(self, *args):
@@ -162,20 +164,24 @@ class MITMServerApp(App):
         return response
 
     # Defining the new meeting creation function
+    meetingIDList = []
     def new_meeting(self, msg):
-        # Make new table entry in database
-        # add user information from given login
-        # Find other user and send invite by adding it to table in database
-            # This may require on login/ random refresh for users to check for any invites.
-        # Here is what we want passed to server
-            # datetime
-            # Locations filters
-            # User invited
-            # user ID (for location finding in DB)
-        self.print_message("Inside new_meeting Function")
+        
+        while(self.meetingIDList.__contains__(meetingID) == True):
+            meetingID = random.randint(10000,99999)
+        self.meetingIDList.append(meetingID)
+        sql = 'INSERT INTO Meeting (MeetingmeetingID, User1, User2, MeetingTime, LocationID, MP-Long, MP-Lat, User1-Addr, User2-Addr, meeting_Status) VALUES (%d,%s,%s,%s,%s,%f,%f,%s,%s,%s)'
+        val = (meetingID, msg['meeting_instigator'], msg['meeting_partner'], msg['time'], "PENDING", "PENDING", "PENDING", msg['instigator_location'], "PENDING", "PENDING")
+        self.cursor.execute(sql,val)
+        self.connection.commit()
 
-    # Defining the new meeting creation function
-    def new_meeting(self, msg):
+        #if user2 accepts
+        #insert the user2 addr, meeting_status into the db
+        #call midpoint with the two user locations {We should just make that function convert the locs to lat and long}
+        #assign the users one of the locations between them
+        #insert the locationID of the assigned place to db
+
+        
         # Make new table entry in database
         # add user information from given login
         # Find other user and send invite by adding it to table in database
