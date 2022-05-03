@@ -166,12 +166,13 @@ class MITMServerApp(App):
     # Defining the new meeting creation function
     meetingIDList = []
     def new_meeting(self, msg):
-        
-        while(self.meetingIDList.__contains__(meetingID) == True):
-            meetingID = random.randint(10000,99999)
-        self.meetingIDList.append(meetingID)
-        sql = 'INSERT INTO Meeting (MeetingmeetingID, User1, User2, MeetingTime, LocationID, MP-Long, MP-Lat, User1-Addr, User2-Addr, meeting_Status) VALUES (%d,%s,%s,%s,%s,%f,%f,%s,%s,%s)'
-        val = (meetingID, msg['meeting_instigator'], msg['meeting_partner'], msg['time'], "PENDING", "PENDING", "PENDING", msg['instigator_location'], "PENDING", "PENDING")
+        newMeetingID = random.randint(10000,99999)
+        while(self.meetingIDList.__contains__(newMeetingID) == True):
+            newMeetingID = random.randint(10000,99999)
+        self.meetingIDList.append(newMeetingID)
+        #{"command": "create_meeting", "meeting_instigator": "kalvin", "meeting_partner": Wesley, "instigator_location": "123, Sesame Street", "date": "1/5/2019", "time": "17:15"}//
+        sql = "INSERT INTO defaultdb.Meeting (MeetingID, User1, User2, MeetingTime, LocationID, mp_lon, mp_lat, user1_Addr, user2_Addr, meeting_Status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        val = (newMeetingID, msg['meeting_instigator'], msg['meeting_partner'], msg['time'], '0', '1.1', '1.1', msg['instigator_location'], 'PENDING', 'PENDING')
         self.cursor.execute(sql,val)
         self.connection.commit()
 
@@ -181,7 +182,7 @@ class MITMServerApp(App):
         #assign the users one of the locations between them
         #insert the locationID of the assigned place to db
 
-        
+
         # Make new table entry in database
         # add user information from given login
         # Find other user and send invite by adding it to table in database
