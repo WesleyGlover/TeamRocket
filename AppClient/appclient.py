@@ -17,7 +17,6 @@ from kivymd.uix.picker import MDDatePicker;
 from kivymd.uix.textfield import MDTextField;
 from kivymd.uix.button import MDFlatButton, MDRaisedButton;
 
-
 class Card(MDCard, RoundedRectangularElevationBehavior):
     pass;
 
@@ -27,6 +26,7 @@ from geopy.geocoders import Nominatim
 import geocoder
 
 from utility import MeetingLayout
+from utility import RequestLayout
 
 #Server connectivity
 from kivy.support import install_twisted_reactor
@@ -95,7 +95,7 @@ class MITMClient(protocol.Protocol):
             return
 
         if 'command' not in msg:
-            return 
+            return
 
         if msg['command'] == 'auth_login':
             if current != 'login':
@@ -133,7 +133,7 @@ class MITMClient(protocol.Protocol):
                 return
 
             app.meetings = msg['meetings']
-            print(app.meetings)            
+            print(app.meetings)
             app.root.get_screen("home").ids.upcoming_meetings.update_meetings(app.meetings)
             return
 
@@ -285,21 +285,25 @@ class HomeScreen(Screen):
 
         return lon
 
-    
 
-class MeetingInfoScreen(Screen):
-    pass;
+#Gonna make this into the pop-up part of the MeetingLayout
+# class MeetingInfoScreen(Screen):
+#     pass;
 
 class CreateMeetingScreen(Screen):
-    time = None;
-    date = None;
-
-    def show_date_picker(self):
-        date_dialog = MDDatePicker()
-        date_dialog.open()
+    def get_time(self, instance, time):
+        self.ids.create_time.text = str(time.hour) + ":" + str(time.minute);
+    def get_date(self, instance, date):
+        self.ids.create_date.text = str(date.month) + "/" + str(date.day) + "/" + str(date.year);
     def show_time_picker(self):
         time_dialog = MDTimePicker()
+        time_dialog.bind(on_save=self.get_time)
         time_dialog.open()
+    def show_date_picker(self):
+        # date_dialog = MDDatePicker(on_save=self.get_date)
+        # date_dialog.bind(on_save=self.get_date)
+        # date_dialog.open()
+        pass
 
     def send_request_button_onclick(self):
         message = {}
@@ -316,8 +320,9 @@ class SettingsScreen(Screen):
     pass;
 class CalenderScreen(Screen):
     pass;
-class ConfirmRequestScreen(Screen):
-    pass;
+#Gonna make this a pop-upbox in the RequestLayout
+# class ConfirmRequestScreen(Screen):
+#     pass;
 class ExploreScreen(Screen):
     pass;
 
@@ -329,10 +334,6 @@ class Manager(ScreenManager):
 #set the app size
 Window.size = (900/2, 1600/2);
 
-#grab the design document
-
-
-
 class Meet_in_the_MiddleApp(MDApp):
     connection = None
     meetings = []   #List of user's meetings. Accessible from anywhere
@@ -341,7 +342,6 @@ class Meet_in_the_MiddleApp(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs);
 
-        # self.theme_cls.theme_style = "Light"
         Window.clearcolor = utils.get_color_from_hex(egg_back);
         # Window.borderless = True;
 
@@ -356,6 +356,7 @@ class Meet_in_the_MiddleApp(MDApp):
 
     def build(self):
         self.connect_to_server() #For server
+        #grab the design document
         kv = Builder.load_file('applayout.kv');
         return kv;
 
