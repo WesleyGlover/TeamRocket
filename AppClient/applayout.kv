@@ -120,7 +120,7 @@ Manager:
             size: 0, 20
         MDFlatButton: #temp while i figure out touch events should be a Label
             id: accredation
-            text: "App by TeamRocket"
+            text: "THIS IS A BUTTON"
             font_size: 16
             pos_hint: {'center_x': 0.5}
             size_hint: (.2, .2)
@@ -179,19 +179,16 @@ Manager:
                 color: utils.get_color_from_hex(soft_black)
                 font_size: 12
                 pos_hint: {'center_x': .5, 'center_y': .2}
-                size_hint: (.4, .1)
                 #on_press: #nothing for now
             MDRaisedButton:
                 text: "Login"
                 font_size: 20
                 pos_hint: {'center_x': .5}
-                size_hint: (.5, .2)
                 on_press: root.login_button_onclick(); #app.root.current = "home" #should do validation though
         MDFlatButton: #temp while i figure out touch events
             text: "Register"
             font_size: 16
             pos_hint: {'center_x': .5}
-            size_hint: (.3, .1)
             on_press: app.root.current = "register"
 
 <RegisterScreen>
@@ -292,7 +289,6 @@ Manager:
                 text: "Register"
                 font_size: 20
                 pos_hint: {'center_x': .5}
-                size_hint: (.5, .2)
 
                 #there should be validation and stuff, but for now we just go to the home screen
                 on_press: root.register_button_onclick();

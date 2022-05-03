@@ -387,11 +387,10 @@ class Meet_in_the_MiddleApp(MDApp):
             self.end_thread.wait(10)
 
     def on_stop(self):
-        #reactor.disconnect()
-        print("stopping")
         self.running = False
         self.end_thread.set()
-        self.meetings_pinger.join()
+        if self.meetings_pinger.is_alive():
+            self.meetings_pinger.join()
 
 class ErrorMessage(MDLabel):
     errorColor = utils.get_color_from_hex(apple_red)
