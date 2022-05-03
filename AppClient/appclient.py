@@ -103,6 +103,7 @@ class MITMClient(protocol.Protocol):
 
             if msg['result'] == 'success':
                 app.root.current = 'home'
+                app.user_info['username'] = msg['username']
                 app.meetings_pinger.start()
                 return
             else:
@@ -122,6 +123,7 @@ class MITMClient(protocol.Protocol):
                 return
             elif msg['result'] == 'success':
                 app.root.current = 'home'
+                app.user_info["username"] = msg['username']
                 app.meetings_pinger.start()
                 return
             else:
@@ -140,7 +142,7 @@ class MITMClient(protocol.Protocol):
         if msg['command'] == 'receive_meeting_invite':
             return
 
-        
+
 
 
 

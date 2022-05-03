@@ -39,7 +39,7 @@ class MITMServerFactory(protocol.Factory):
 class MITMServerApp(App):
     label = None
     textbox = None
-    
+
     #Connecting to db. Cursor is used to query the db. connection is for commiting a edit to the db
     def database_auth():
             try:
@@ -115,6 +115,12 @@ class MITMServerApp(App):
             self.print_message("Starting New Meeting")
             self.new_meeting(msg)
 
+        # Checking for update pings
+        if msg['command'] == 'ping_meetings':
+            self.print_message("Ping Update")
+            response = self.ping_update(msg)
+
+
         self.label.text += "responded: {}\n".format(response)
         return (json.dumps(response).encode('utf-8'))
 
@@ -133,13 +139,14 @@ class MITMServerApp(App):
             response['result'] = "fail"
         else:
             response['result'] = "success"
+            response['username'] = msg['username']
         return response
 
     # Defining the registration function
     def auth_regi(self, msg):
         response = {'command': 'auth_register'}
         #TODO change * to username
-        self.cursor.execute("Select * From User where Username = '{}'".format(msg['username']))
+        self.cursor.execute(f"Select * From User where Username = \'{msg['username']}\'")
         result = self.cursor.fetchall()
         self.print_message(result)
         if(result != []):
@@ -147,7 +154,7 @@ class MITMServerApp(App):
             self.print_message(response)
             return response
 
-        self.cursor.execute("Select * From User where Email = '{}' ".format(msg['email']))
+        self.cursor.execute(f"Select * From User where Email = \'{msg['email']}\' ")
         result = self.cursor.fetchall()
         if(result != []):
             response['result'] = "email_exists"
@@ -161,6 +168,7 @@ class MITMServerApp(App):
         self.connection.commit()
 
         response['result'] = "success"
+        response['username'] = msg['username']
         return response
 
     # Defining the new meeting creation function
@@ -214,6 +222,44 @@ class MITMServerApp(App):
         midpoint['lon'] = m['lon2']
 
         return midpoint
+
+    # This function works for updating client by set pinging intervals
+    def ping_update(self, msg):
+        # breaking down the message passed
+        username = msg['user']
+
+        # quering the DB for list of meeting information based on username
+        # Tbales: User, Meeting, Locations.
+        # Meeting contains username(s). Search through meeting table and
+        # Return all meetings with user involved
+        sql = 'SELECT * FROM Meeting WHERE User1 = (%s) OR User2 = (%s)'
+        val = (username, username)
+        self.cursor.execute(sql, val)
+        meetings = self.cursor.fetchall()
+
+        # Stored as an array:
+        # 0: MeetingID
+        # 1: User1
+        # 2: User2
+        # 3: MeetingTime
+        # 4: LocationID
+        # 5: mp_lon
+        # 6: mp_lat
+        # 7: user1_Addr
+        # 8: User2_Addr
+        # 9: meeting_status
+
+
+        self.print_message(f"Size of Meeting: {len(meetings)}")
+
+        # Creating a json to send back to client
+        response = {'command' : 'ping_meetings'}
+        response['#_of_meetings'] = len(meetings)
+        response['arr'] = meetings
+
+        # Returning the meetings to the client
+        return response
+
 
 
 if __name__ == '__main__':
