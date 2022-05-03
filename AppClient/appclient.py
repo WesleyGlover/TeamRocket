@@ -140,6 +140,8 @@ class MITMClient(protocol.Protocol):
         if msg['command'] == 'receive_meeting_invite':
             return
 
+        
+
 
 
 
@@ -299,6 +301,17 @@ class CreateMeetingScreen(Screen):
         time_dialog = MDTimePicker()
         time_dialog.open()
 
+    def send_request_button_onclick(self):
+        message = {}
+        message["command"] = "create_meeting"
+        message["meeting_instigator"] = self.app.user_info["username"]
+        message["meeting_partner"] = "user2"
+        message["instigator_location"] = "123 Sesame Street"
+        message["date"] = "6/1/2022"
+        message["time"] = "12:00"
+
+        self.app.send_message(message)
+
 class SettingsScreen(Screen):
     pass;
 class CalenderScreen(Screen):
@@ -323,6 +336,7 @@ Window.size = (900/2, 1600/2);
 class Meet_in_the_MiddleApp(MDApp):
     connection = None
     meetings = []   #List of user's meetings. Accessible from anywhere
+    user_info = {"username": "user1"}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs);
@@ -349,8 +363,8 @@ class Meet_in_the_MiddleApp(MDApp):
     def connect_to_server(self):
         #Values will need to change when connecting to actual server
         ip_address = gethostbyname("meetmehalfwayserver.ddns.net")
-        reactor.connectTCP(ip_address, 25565, MITMClientFactory(self))
-        #reactor.connectTCP('localhost', 8000, MITMClientFactory(self))
+        #reactor.connectTCP(ip_address, 25565, MITMClientFactory(self))
+        reactor.connectTCP('localhost', 8000, MITMClientFactory(self))
     def on_connection(self, connection):
             self.connection = connection
 
@@ -363,16 +377,15 @@ class Meet_in_the_MiddleApp(MDApp):
 
     def ping_user_meetings(self):
         while self.running:
-            msg = {'command': 'ping_meetings'}
+            msg = {'command': 'ping_meetings', 'user': self.user_info["username"]}
             self.send_message(msg)
             self.end_thread.wait(10)
 
     def on_stop(self):
-        #reactor.disconnect()
-        print("stopping")
         self.running = False
         self.end_thread.set()
-        self.meetings_pinger.join()
+        if self.meetings_pinger.is_alive():
+            self.meetings_pinger.join()
 
 class ErrorMessage(MDLabel):
     errorColor = utils.get_color_from_hex(apple_red)
