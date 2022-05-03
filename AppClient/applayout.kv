@@ -33,11 +33,11 @@ Manager:
     LoginScreen:
     RegisterScreen:
     HomeScreen:
-    MeetingInfoScreen:
+    # MeetingInfoScreen:
     CreateMeetingScreen:
     SettingsScreen:
     CalenderScreen:
-    ConfirmRequestScreen:
+    # ConfirmRequestScreen:
     ExploreScreen:
 
 <BoxLayout>
@@ -91,11 +91,13 @@ Manager:
 <RequestsPopup@Popup>
     auto_dismiss: True
     title: "Requests:"
-    size_hint: (.4, .4)
-    pos_hint: {'center_x': .8, 'center_y': .8}
+    size_hint: (.8, .4)
+    pos_hint: {'center_x': .6, 'center_y': .8}
 
-    Label:
-        text: "Requests go here"
+    RequestLayout:
+        id: requested_meetings
+        app: app
+        size_hint: (1, 1)
 
 <TitleScreen>
     name: "title"
@@ -123,7 +125,6 @@ Manager:
             text: "THIS IS A BUTTON"
             font_size: 16
             pos_hint: {'center_x': 0.5}
-            size_hint: (.2, .2)
             on_press: app.root.current = "home"
 
     #on_touch_down: app.root.current = "login"
@@ -373,23 +374,23 @@ Manager:
 
                 on_press: app.root.current = "explore"
 
-<MeetingInfoScreen>
-    name: "meeting_info"
-
-    GridLayout:
-        cols: 1
-
-        Label:
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            size_hint: (1, .2)
-        MapView: #this map will show the meeting location
-            id: meeting_info_map
-            lat: 33.218850
-            lon: -97.146090
-            zoom: 10
-        BoxLayout:
-            Label:
-            Button:
+# <MeetingInfoScreen>
+#     name: "meeting_info"
+#
+#     GridLayout:
+#         cols: 1
+#
+#         Label:
+#             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+#             size_hint: (1, .2)
+#         MapView: #this map will show the meeting location
+#             id: meeting_info_map
+#             lat: 33.218850
+#             lon: -97.146090
+#             zoom: 10
+#         BoxLayout:
+#             Label:
+#             Button:
 
 <CreateMeetingScreen>
     name: "create_meeting"
@@ -447,13 +448,13 @@ Manager:
                         pos: self.pos
                 Button:
                     text: "Date Picker"
-                    on_press: root.set_date();
+                    on_press: root.show_date_picker();
                 Label:
                     id: create_date
                     text: "mm/dd/yy"
                 Button:
                     text: "Time Picker"
-                    on_press: root.set_time();
+                    on_press: root.show_time_picker();
                 Label:
                     id: create_time
                     text: "hh:mm"
@@ -551,14 +552,17 @@ Manager:
 
                 on_press: Factory.RequestsPopup().open() #open request pop-up
         CalendarWidget: #no options for this because it's weird
-        BoxLayout:
-            BoxLayout:
-                canvas.before:
-                    Color:
-                        rgba: utils.get_color_from_hex(dark_peach)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
+        Card:
+            id: meeting_on_day_content
+            padding: 10
+            Label:
+                text: "Meetings On Selected Day"
+                size_hint: (1, .1)
+            MeetingLayout: #going to make a CalMeetingLayout I think
+                id: meeting_on_day_meetings
+                app: app
+                size_hint: (1, .9)
+
         GridLayout:
             canvas.before:
                 Color:
@@ -589,41 +593,41 @@ Manager:
 
                 on_press: app.root.current = "explore"
 
-<ConfirmRequestScreen>
-    name: "confirm_request"
-
-    GridLayout:
-        cols: 1
-
-        GridLayout:
-            cols: 2
-            Button:
-            Label:
-        MapView:
-            id: confirm_request_map
-            lat: 33.218850
-            lon: -97.146090
-            zoom: 10
-        BoxLayout:
-            # Image: #map, image for now
-            #     source: "images/mexico_map.jpg"
-            GridLayout:
-                canvas.before:
-                    Color:
-                        rgba: utils.get_color_from_hex(dark_peach)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-            GridLayout:
-                canvas.before:
-                    Color:
-                        rgba: utils.get_color_from_hex(dark_peach)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-            Button:
-                text: "Confirm Meeting Information"
-                #on_press: #send the information to the server to create the meeting
+# <ConfirmRequestScreen>
+#     name: "confirm_request"
+#
+#     GridLayout:
+#         cols: 1
+#
+#         GridLayout:
+#             cols: 2
+#             Button:
+#             Label:
+#         MapView:
+#             id: confirm_request_map
+#             lat: 33.218850
+#             lon: -97.146090
+#             zoom: 10
+#         BoxLayout:
+#             # Image: #map, image for now
+#             #     source: "images/mexico_map.jpg"
+#             GridLayout:
+#                 canvas.before:
+#                     Color:
+#                         rgba: utils.get_color_from_hex(dark_peach)
+#                     Rectangle:
+#                         size: self.size
+#                         pos: self.pos
+#             GridLayout:
+#                 canvas.before:
+#                     Color:
+#                         rgba: utils.get_color_from_hex(dark_peach)
+#                     Rectangle:
+#                         size: self.size
+#                         pos: self.pos
+#             Button:
+#                 text: "Confirm Meeting Information"
+#                 #on_press: #send the information to the server to create the meeting
 
 <ExploreScreen>
     name: "explore"

@@ -17,7 +17,6 @@ from kivymd.uix.picker import MDDatePicker;
 from kivymd.uix.textfield import MDTextField;
 from kivymd.uix.button import MDFlatButton, MDRaisedButton;
 
-
 class Card(MDCard, RoundedRectangularElevationBehavior):
     pass;
 
@@ -27,6 +26,7 @@ from geopy.geocoders import Nominatim
 import geocoder
 
 from utility import MeetingLayout
+from utility import RequestLayout
 
 #Server connectivity
 from kivy.support import install_twisted_reactor
@@ -284,50 +284,32 @@ class HomeScreen(Screen):
         return lon
 
 
-
-class MeetingInfoScreen(Screen):
-    pass;
+#Gonna make this into the pop-up part of the MeetingLayout
+# class MeetingInfoScreen(Screen):
+#     pass;
 
 class CreateMeetingScreen(Screen):
-    time = None;
-    date = None;
-
     def get_time(self, instance, time):
-        '''
-        The method returns the set time.
-
-        :type instance: <kivymd.uix.picker.MDTimePicker object>
-        :type time: <class 'datetime.time'>
-        '''
-        return time
-    def get_date(self, date):
-        '''
-        :type date: <class 'datetime.date'>
-        '''
-        return date
+        self.ids.create_time.text = str(time.hour) + ":" + str(time.minute);
+    def get_date(self, instance, date):
+        self.ids.create_date.text = str(date.month) + "/" + str(date.day) + "/" + str(date.year);
     def show_time_picker(self):
         time_dialog = MDTimePicker()
-        time_dialog.bind(self.time = self.get_time)
+        time_dialog.bind(on_save=self.get_time)
         time_dialog.open()
     def show_date_picker(self):
-        date_dialog = MDDatePicker()
-        date_dialog.bind(self.date = self.get_date)
-        date_dialog.open()
-
-
-    def set_time(self):
-        self.show_time_picker();
-        self.ids.create_time = str(time.hour) + ":" + str(time.minute);
-    def set_date(self):
-        self.show_date_picker();
-        self.ids.create_date = str(date.month) + "/" + str(date.day) + "/" + str(date.year);
+        # date_dialog = MDDatePicker(on_save=self.get_date)
+        # date_dialog.bind(on_save=self.get_date)
+        # date_dialog.open()
+        pass
 
 class SettingsScreen(Screen):
     pass;
 class CalenderScreen(Screen):
     pass;
-class ConfirmRequestScreen(Screen):
-    pass;
+#Gonna make this a pop-upbox in the RequestLayout
+# class ConfirmRequestScreen(Screen):
+#     pass;
 class ExploreScreen(Screen):
     pass;
 
