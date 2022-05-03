@@ -124,7 +124,7 @@ Manager:
             font_size: 16
             pos_hint: {'center_x': 0.5}
             size_hint: (.2, .2)
-            on_press: app.root.current = "login"
+            on_press: app.root.current = "home"
 
     #on_touch_down: app.root.current = "login"
 
@@ -451,13 +451,15 @@ Manager:
                         pos: self.pos
                 Button:
                     text: "Date Picker"
-                    on_press: root.show_date_picker();
+                    on_press: root.set_date();
                 Label:
+                    id: create_date
                     text: "mm/dd/yy"
                 Button:
                     text: "Time Picker"
-                    on_press: root.show_time_picker();
+                    on_press: root.set_time();
                 Label:
+                    id: create_time
                     text: "hh:mm"
             Label:
                 text: "Location Filters"

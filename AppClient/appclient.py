@@ -95,7 +95,7 @@ class MITMClient(protocol.Protocol):
             return
 
         if 'command' not in msg:
-            return 
+            return
 
         if msg['command'] == 'auth_login':
             if current != 'login':
@@ -133,7 +133,7 @@ class MITMClient(protocol.Protocol):
                 return
 
             app.meetings = msg['meetings']
-            print(app.meetings)            
+            print(app.meetings)
             app.root.get_screen("home").ids.upcoming_meetings.update_meetings(app.meetings)
             return
 
@@ -283,7 +283,7 @@ class HomeScreen(Screen):
 
         return lon
 
-    
+
 
 class MeetingInfoScreen(Screen):
     pass;
@@ -292,12 +292,35 @@ class CreateMeetingScreen(Screen):
     time = None;
     date = None;
 
-    def show_date_picker(self):
-        date_dialog = MDDatePicker()
-        date_dialog.open()
+    def get_time(self, instance, time):
+        '''
+        The method returns the set time.
+
+        :type instance: <kivymd.uix.picker.MDTimePicker object>
+        :type time: <class 'datetime.time'>
+        '''
+        return time
+    def get_date(self, date):
+        '''
+        :type date: <class 'datetime.date'>
+        '''
+        return date
     def show_time_picker(self):
         time_dialog = MDTimePicker()
+        time_dialog.bind(self.time = self.get_time)
         time_dialog.open()
+    def show_date_picker(self):
+        date_dialog = MDDatePicker()
+        date_dialog.bind(self.date = self.get_date)
+        date_dialog.open()
+
+
+    def set_time(self):
+        self.show_time_picker();
+        self.ids.create_time = str(time.hour) + ":" + str(time.minute);
+    def set_date(self):
+        self.show_date_picker();
+        self.ids.create_date = str(date.month) + "/" + str(date.day) + "/" + str(date.year);
 
 class SettingsScreen(Screen):
     pass;
@@ -316,10 +339,6 @@ class Manager(ScreenManager):
 #set the app size
 Window.size = (900/2, 1600/2);
 
-#grab the design document
-
-
-
 class Meet_in_the_MiddleApp(MDApp):
     connection = None
     meetings = []   #List of user's meetings. Accessible from anywhere
@@ -327,7 +346,6 @@ class Meet_in_the_MiddleApp(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs);
 
-        # self.theme_cls.theme_style = "Light"
         Window.clearcolor = utils.get_color_from_hex(egg_back);
         # Window.borderless = True;
 
@@ -342,6 +360,7 @@ class Meet_in_the_MiddleApp(MDApp):
 
     def build(self):
         self.connect_to_server() #For server
+        #grab the design document
         kv = Builder.load_file('applayout.kv');
         return kv;
 
