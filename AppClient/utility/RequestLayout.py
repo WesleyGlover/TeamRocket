@@ -9,6 +9,8 @@ from kivy.uix.popup import Popup;
 
 from kivymd.uix.card import MDCard;
 
+from kivy.garden.mapview import MapView;
+
 Builder.load_string("""
 #:import utils kivy.utils
 
@@ -57,10 +59,47 @@ Builder.load_string("""
     id: request_date
     pos_hint: {"center_y": .5}
     color: utils.get_color_from_hex(soft_black)
+
+<ConfirmRequestPopup>
+    size_hint: (.8, .8)
+    pos_hint: {'center_x': .5, 'center_y': .5}
 """)
 
 class ConfirmRequestPopup(Popup):
-    pass;
+    def __init__(self, meeting_id, *args, **kwargs):
+        super().__init__(*args, **kwargs);
+        self.meeting_id = meeting_id;
+        self.title = "Request Information";
+
+        #query for the meeting info from the server
+        #populate that here to widgets
+        self.meeting_info_container = BoxLayout();
+
+        #meeting map
+        self.meeting_info_container.meeting_loc_map = MapView();
+        self.meeting_info_container.meeting_loc_map.lat = 30.273300;
+        self.meeting_info_container.meeting_loc_map.lon = -98.789063;
+        self.meeting_info_container.meeting_loc_map.zoom = 17;
+        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_loc_map);
+
+        #meeting instigator
+        self.meeting_info_container.meeting_instigator = Label();
+        self.meeting_info_container.meeting_instigator.text = "Meeting Instigater: ";
+        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_instigator);
+        #meeting location
+        self.meeting_info_container.meeting_loc = Label();
+        self.meeting_info_container.meeting_loc.text = "Meeting Location: ";
+        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_loc);
+        #meeting datetime
+        self.meeting_info_container.meeting_date = Label();
+        self.meeting_info_container.meeting_date.text = "Meeting Date: ";
+        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_date);
+        self.meeting_info_container.meeting_time = Label();
+        self.meeting_info_container.meeting_time.text = "Meeting Time: ";
+        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_time);
+
+        #then assign the container to self.content
+        self.content = self.meeting_info_container;
 
 class RequestLayout(ScrollView):
     def __init__(self, *args, **kwargs):
@@ -104,7 +143,7 @@ class RequestBand(MDCard):
     request_meeting_id = None;
 
     def on_touch_down(self, touch):
-        meeting_popup = ConfirmRequestPopup();
+        meeting_popup = ConfirmRequestPopup(self.request_meeting_id);
         meeting_popup.open();
 
 class RequestInstigator(Label):

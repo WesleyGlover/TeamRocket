@@ -27,6 +27,8 @@ import geocoder
 
 from utility import MeetingLayout
 from utility import RequestLayout
+from utility import CalMeetingLayout
+from utility import ExploreLayout
 
 #Server connectivity
 from kivy.support import install_twisted_reactor
@@ -141,12 +143,6 @@ class MITMClient(protocol.Protocol):
 
         if msg['command'] == 'receive_meeting_invite':
             return
-
-
-
-
-
-
 
 class MITMClientFactory(protocol.ReconnectingClientFactory):
     protocol = MITMClient
@@ -338,11 +334,13 @@ Window.size = (900/2, 1600/2);
 
 class Meet_in_the_MiddleApp(MDApp):
     connection = None
-    meetings = []   #List of user's meetings. Accessible from anywhere
+    meetings = [] #List of user's meetings. Accessible from anywhere
     user_info = {"username": "user1"}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs);
+
+        self.config = open("brownie.config");
 
         Window.clearcolor = utils.get_color_from_hex(egg_back);
         # Window.borderless = True;

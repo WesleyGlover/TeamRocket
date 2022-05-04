@@ -558,7 +558,7 @@ Manager:
             Label:
                 text: "Meetings On Selected Day"
                 size_hint: (1, .1)
-            MeetingLayout: #going to make a CalMeetingLayout I think
+            CalMeetingLayout: #going to make a CalMeetingLayout I think
                 id: meeting_on_day_meetings
                 app: app
                 size_hint: (1, .9)
@@ -645,28 +645,11 @@ Manager:
             lon: -97.146090
             zoom: 10
             size_hint: (1, .6)
-        BoxLayout:
-            padding: 10
 
-            Label:
-                text: "Search"
-                color: utils.get_color_from_hex(soft_black)
-                size_hint: (1, .1)
-            TextInput:
-                id: search_content
-                size_hint: (1, .1)
-            Label:
-                text: "List of Locations"
-                color: utils.get_color_from_hex(soft_black)
-                size_hint: (1, .1)
-            ScrollView:
-                canvas.before:
-                    Color:
-                        rgba: utils.get_color_from_hex(dark_peach)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-            #list of locations, which can be clicked on and make a pop-up
+        #list of locations, which can be clicked on and make a pop-up
+        ExploreLayout:
+            id: location_list
+            app: app
         GridLayout:
             canvas.before:
                 Color:

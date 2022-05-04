@@ -7,6 +7,9 @@ from kivy.uix.popup import Popup;
 
 from kivymd.uix.card import MDCard;
 
+from .MeetingLayout import MeetingBandContainer, MeetingBand, MeetingName
+from .MeetingLayout import MeetingPartner, MeetingDate, MeetingInfoPopup, MeetingLayoutData
+
 Builder.load_string("""
 #:import utils kivy.utils
 
@@ -35,7 +38,7 @@ Builder.load_string("""
 #:set egg_back '#F2F2F2' #for light mode background
 
 #These are defaults for the MeetingLayout classes
-<MeetingLayout>:
+<CalMeetingLayout>:
     do_scroll_x: False #needs to be false to scoll only in 'y' direction
     do_scroll_y: True
 <MeetingBandContainer>
@@ -65,28 +68,16 @@ Builder.load_string("""
     pos_hint: {'center_x': .5, 'center_y': .5}
 """)
 
-#The MeetingInfoPopup will display on band touch
-class MeetingInfoPopup(Popup):
-    def __init__(self, meeting_id, *args, **kwargs):
-        super().__init__(*args, **kwargs);
-        self.meeting_id = meeting_id;
-        self.title = "Request Information";
-
-        #query for the meeting info from the server
-        #populate that here to widgets
-
-        #add each widget to a container widget
-        #then assign the container to self.content
-
-class MeetingLayout(ScrollView):
+class CalMeetingLayout(ScrollView):
+    #the data for this bad boy needs to happen in such a way that it only comes from the calender day selected
     def __init__(self, *args, **kwargs):
-        super(MeetingLayout, self).__init__(*args, **kwargs);
+        super(CalMeetingLayout, self).__init__(*args, **kwargs);
 
         ins_data = MeetingLayoutData();
         ins_data.meeting_id = 12345;
-        ins_data.meeting_name = "Book Club";
-        ins_data.meeting_partner = "Kalvin";
-        ins_data.meeting_date = "May 20, 2020";
+        ins_data.meeting_name = "Chess Club";
+        ins_data.meeting_partner = "Matt";
+        ins_data.meeting_date = "May 21, 2020";
 
         proc_data_set = [ins_data] #self.prepare_data();
         self.init_ui(proc_data_set);
@@ -132,28 +123,3 @@ class MeetingLayout(ScrollView):
             print(meeting)
             datum = self.prepare_data(meeting)
             self.create_meeting_band(datum, len(self.main_view.band_list))
-
-
-
-class MeetingBandContainer(BoxLayout):
-    pass;
-
-class MeetingBand(MDCard):
-    meeting_id = None; #keep track of the meeting_id so that we can kill it later, maybe
-
-    def on_touch_down(self, touch):
-        meeting_popup = MeetingInfoPopup(self.meeting_id); #might pass that to the MeetingInfoPopup so that we can display all the info
-        meeting_popup.open();
-
-class MeetingName(Label):
-    pass;
-class MeetingPartner(Label):
-    pass;
-class MeetingDate(Label):
-    pass;
-
-class MeetingLayoutData: #this is the data class the meetinglayout will be using
-    meeting_id = None;
-    meeting_name = None;
-    meeting_partner = None;
-    meeting_date = None;
