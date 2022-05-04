@@ -88,7 +88,7 @@ Manager:
 
     Label:
         text: "This is how the app works"
-<RequestsPopup@Popup>
+<RequestsPopup>
     auto_dismiss: True
     title: "Requests:"
     size_hint: (.8, .4)
@@ -97,7 +97,6 @@ Manager:
     RequestLayout:
         id: requested_meetings
         app: app
-        size_hint: (1, 1)
 
 <TitleScreen>
     name: "title"
@@ -550,7 +549,7 @@ Manager:
                 text: "R"
                 size_hint: (.2, 1)
 
-                on_press: Factory.RequestsPopup().open() #open request pop-up
+                on_press: root.request_popup.open() #open request pop-up
         CalendarWidget: #no options for this because it's weird
         Card:
             id: meeting_on_day_content

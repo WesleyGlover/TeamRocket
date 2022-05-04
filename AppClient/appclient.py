@@ -138,7 +138,7 @@ class MITMClient(protocol.Protocol):
 
             app.meetings = msg['meetings']
             app.root.get_screen("home").ids.upcoming_meetings.update_meetings(app.meetings)
-            app.root.get_screen("calendar").ids.
+            #app.root.get_screen("calendar")
             return
 
         if msg['command'] == 'receive_meeting_invite':
@@ -316,9 +316,17 @@ class CreateMeetingScreen(Screen):
 
 class SettingsScreen(Screen):
     pass;
-class CalenderScreen(Screen):
-    
+
+class RequestsPopup(Popup):
     pass;
+
+class CalenderScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs);
+
+        self.request_popup = RequestsPopup();
+
+
 #Gonna make this a pop-upbox in the RequestLayout
 # class ConfirmRequestScreen(Screen):
 #     pass;
