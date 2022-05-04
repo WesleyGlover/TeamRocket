@@ -248,14 +248,38 @@ class MITMServerApp(App):
         # 7: user1_Addr
         # 8: User2_Addr
         # 9: meeting_status
+        keys = ['meeting_id', 
+                'meeting_instigator', 
+                'meeting_partner', 
+                'meeting_time',
+                'location_ID',
+                'mp_lon', 
+                'mp_lat',
+                'meeting_instigator_addr',
+                'meeting_partner_addr',
+                'meeting_status']
 
+        keys_for_user = ['meeting_id', 
+                'meeting_instigator', 
+                'meeting_partner', 
+                'meeting_time',
+                'location_ID',
+                'mp_lon', 
+                'mp_lat',
+                'meeting_status']
+
+        response_meetings = []
+
+        for meeting in meetings:
+            meetings_as_dict = dict(zip(keys, meeting))
+            response_meetings.append({k:v for k,v in meetings_as_dict.items() if k in keys_for_user})
 
         self.print_message(f"Size of Meeting: {len(meetings)}")
 
         # Creating a json to send back to client
-        response = {'command' : 'ping_meetings'}
+        response = {'command' : 'user_meetings'}
         response['#_of_meetings'] = len(meetings)
-        response['arr'] = meetings
+        response['meetings'] = response_meetings
 
         # Returning the meetings to the client
         return response

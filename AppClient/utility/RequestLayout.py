@@ -67,9 +67,9 @@ Builder.load_string("""
 """)
 
 class ConfirmRequestPopup(Popup):
-    def __init__(self, meeting_id, *args, **kwargs):
+    def __init__(self, meeting_info, *args, **kwargs):
         super().__init__(*args, **kwargs);
-        self.meeting_id = meeting_id;
+        self.meeting_info = meeting_info;
         self.title = "Request Information";
 
         #query for the meeting info from the server
@@ -85,18 +85,15 @@ class ConfirmRequestPopup(Popup):
 
         #meeting instigator
         self.meeting_info_container.meeting_instigator = Label();
-        self.meeting_info_container.meeting_instigator.text = "Meeting Instigater: ";
+        self.meeting_info_container.meeting_instigator.text = f"Meeting Instigater: {meeting_info['meeting_instigator']}";
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_instigator);
-        #meeting location
-        self.meeting_info_container.meeting_loc = Label();
-        self.meeting_info_container.meeting_loc.text = "Meeting Location: ";
-        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_loc);
+
         #meeting datetime
         self.meeting_info_container.meeting_date = Label();
-        self.meeting_info_container.meeting_date.text = "Meeting Date: ";
+        self.meeting_info_container.meeting_date.text = "Meeting Date: temp date";
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_date);
         self.meeting_info_container.meeting_time = Label();
-        self.meeting_info_container.meeting_time.text = "Meeting Time: ";
+        self.meeting_info_container.meeting_time.text = f"Meeting Time: {meeting_info['meeting_time']}";
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_time);
 
         self.meeting_info_container.accept_button = Button(text = "Accept");
@@ -110,13 +107,7 @@ class RequestLayout(ScrollView):
     def __init__(self, *args, **kwargs):
         super(RequestLayout, self).__init__(*args, **kwargs);
 
-        ins_data = RequestLayoutData();
-        ins_data.meeting_id = 12345;
-        ins_data.request_instigator = "Kalvin"
-        ins_data.request_date = "May 20, 2020"
-
-        proc_data_set = [ins_data] #self.prepare_data();
-        self.init_ui(proc_data_set);
+        self.init_ui([]);
 
     def init_ui(self, data):
         self.main_view = RequestBandContainer();
@@ -131,24 +122,31 @@ class RequestLayout(ScrollView):
             count += 1;
 
     def create_request_band(self, data_instance, position):
+
         self.main_view.band_list.append(RequestBand(orientation = "horizontal"));
-        self.main_view.band_list[position].request_meeting_id = data_instance.meeting_id;
-        self.main_view.band_list[position].add_widget(RequestInstigator(text = data_instance.request_instigator));
-        self.main_view.band_list[position].add_widget(RequestDate(text = data_instance.request_date));
+        self.main_view.band_list[position].meeting_info = data_instance;
+        self.main_view.band_list[position].add_widget(RequestInstigator(text = data_instance['meeting_instigator']));
+        self.main_view.band_list[position].add_widget(RequestDate(text = "date"));
 
         self.main_view.add_widget(self.main_view.band_list[position]);
 
-    def prepare_data(self, data):
-        pass;
+    def update_requests(self, meetings_list):
+        self.main_view.band_list.clear()
+        self.main_view.clear_widgets()
+
+        for meeting in meetings_list:
+            if meeting['meeting_status'] == "PENDING":
+                self.create_meeting_band(meeting, len(self. ain_view.band_list))
+    
 
 class RequestBandContainer(BoxLayout):
     pass;
 
 class RequestBand(MDCard):
-    request_meeting_id = None;
+    meeting_info = {}
 
     def on_touch_down(self, touch):
-        meeting_popup = ConfirmRequestPopup(self.request_meeting_id);
+        meeting_popup = ConfirmRequestPopup(self.meeting_info);
         meeting_popup.open();
 
 class RequestInstigator(Label):
@@ -156,7 +154,4 @@ class RequestInstigator(Label):
 class RequestDate(Label):
     pass;
 
-class RequestLayoutData: #this is the data class the meetinglayout will be using
-    meeting_id = None;
-    request_instigator = None;
-    request_date = None;
+

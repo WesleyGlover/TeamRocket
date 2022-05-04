@@ -8,7 +8,7 @@ from kivy.uix.popup import Popup;
 from kivymd.uix.card import MDCard;
 
 from .MeetingLayout import MeetingBandContainer, MeetingBand, MeetingName
-from .MeetingLayout import MeetingPartner, MeetingDate, MeetingInfoPopup, MeetingLayoutData
+from .MeetingLayout import MeetingPartner, MeetingDate, MeetingInfoPopup
 
 Builder.load_string("""
 #:import utils kivy.utils
@@ -72,15 +72,7 @@ class CalMeetingLayout(ScrollView):
     #the data for this bad boy needs to happen in such a way that it only comes from the calender day selected
     def __init__(self, *args, **kwargs):
         super(CalMeetingLayout, self).__init__(*args, **kwargs);
-
-        ins_data = MeetingLayoutData();
-        ins_data.meeting_id = 12345;
-        ins_data.meeting_name = "Chess Club";
-        ins_data.meeting_partner = "Matt";
-        ins_data.meeting_date = "May 21, 2020";
-
-        proc_data_set = [ins_data] #self.prepare_data();
-        self.init_ui(proc_data_set);
+        self.init_ui({})
 
     def init_ui(self, data):
         self.main_view = MeetingBandContainer(); #create the boxlayout that goes in the scrollview
@@ -95,31 +87,18 @@ class CalMeetingLayout(ScrollView):
             count += 1;
 
     def create_meeting_band(self, data_instance, position):
+        user_to_show = data_instance['meeting_partner'] if self.app.user_info['username'] == data_instance['meeting_instigator'] else data_instance['meeting_instigator']
+
         self.main_view.band_list.append(MeetingBand(orientation = "horizontal"));
-        self.main_view.band_list[position].meeting_id = data_instance.meeting_id;
-        self.main_view.band_list[position].add_widget(MeetingName(text = data_instance.meeting_name));
-        self.main_view.band_list[position].add_widget(MeetingPartner(text = data_instance.meeting_partner));
-        self.main_view.band_list[position].add_widget(MeetingDate(text = data_instance.meeting_date));
+        self.main_view.band_list[position].meeting_id = data_instance['meeting_id'];
+        self.main_view.band_list[position].add_widget(MeetingPartner(text = user_to_show));
+        self.main_view.band_list[position].add_widget(MeetingDate(text = data_instance['meeting_time']));
 
         self.main_view.add_widget(self.main_view.band_list[position]);
-
-    #Data_set is the dictionary with meeting information
-    #Turn it into a meeting band
-    def prepare_data(self, data_set):
-        data = MeetingLayoutData()
-        data.meeting_id = data_set['meeting_id']
-        data.meeting_name = data_set['meeting_name']
-        data.meeting_partner = data_set['meeting_partner']
-        data.meeting_date = data_set['meeting_date']
-
-        return data
-        #self.app.get_data(); #we ask the server nicely for the current user's meetings
 
     def update_meetings(self, meetings_list):
         self.main_view.band_list.clear()
         self.main_view.clear_widgets()
 
         for meeting in meetings_list:
-            print(meeting)
-            datum = self.prepare_data(meeting)
-            self.create_meeting_band(datum, len(self.main_view.band_list))
+            self.create_meeting_band(meeting, len(self.main_view.band_list))
