@@ -3,6 +3,7 @@
 from kivy.lang import Builder;
 from kivy.uix.scrollview import ScrollView;
 from kivy.uix.label import Label;
+from kivy.uix.button import Button;
 from kivy.uix.boxlayout import BoxLayout;
 from kivy.properties import NumericProperty, ReferenceListProperty;
 from kivy.uix.popup import Popup;
@@ -98,6 +99,10 @@ class ConfirmRequestPopup(Popup):
         self.meeting_info_container.meeting_time.text = "Meeting Time: ";
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_time);
 
+        self.meeting_info_container.accept_button = Button(text = "Accept");
+        self.meeting_info_container.add_widget(self.meeting_info_container.accept_button);
+        self.meeting_info_container.reject_button = Button(text = "Reject");
+        self.meeting_info_container.add_widget(self.meeting_info_container.reject_button);
         #then assign the container to self.content
         self.content = self.meeting_info_container;
 
