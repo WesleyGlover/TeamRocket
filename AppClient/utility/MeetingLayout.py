@@ -73,11 +73,35 @@ class MeetingInfoPopup(Popup):
         self.meeting_id = meeting_id;
         self.title = "Request Information";
 
+        self.meeting_info_container = BoxLayout();
         #query for the meeting info from the server
         #populate that here to widgets
+        #meeting map
+        self.meeting_info_container.meeting_loc_map = MapView();
+        self.meeting_info_container.meeting_loc_map.lat = 30.273300;
+        self.meeting_info_container.meeting_loc_map.lon = -98.789063;
+        self.meeting_info_container.meeting_loc_map.zoom = 17;
+        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_loc_map);
 
-        #add each widget to a container widget
-        #then assign the container to self.content
+        #meeting instigator
+        self.meeting_info_container.meeting_participants = Label();
+        self.meeting_info_container.meeting_participants.text = f"Meeting Participants: {meeting_info['meeting_instigator']}";
+        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_participants);
+
+        #meeting datetime
+        self.meeting_info_container.meeting_date = Label();
+        self.meeting_info_container.meeting_date.text = "Meeting Date: temp date";
+        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_date);
+        self.meeting_info_container.meeting_time = Label();
+        self.meeting_info_container.meeting_time.text = f"Meeting Time: {meeting_info['meeting_time']}";
+        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_time);
+
+        #meeting instigator
+        self.meeting_info_container.meeting_location = Label();
+        self.meeting_info_container.meeting_location.text = f"Meeting Address: ";
+        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_location);
+
+        self.content = self.meeting_info_container;
 
 class MeetingLayout(ScrollView):
     def __init__(self, *args, **kwargs):
@@ -135,5 +159,3 @@ class MeetingDate(Label):
     pass;
 class MeetingLocation(Label):
     pass;
-
-
