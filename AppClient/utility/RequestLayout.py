@@ -90,17 +90,17 @@ class ConfirmRequestPopup(Popup):
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_instigator);
 
         #meeting datetime
-        self.meeting_info_container.meeting_date = Label();
-        self.meeting_info_container.meeting_date.text = "Meeting Date: temp date";
-        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_date);
-        self.meeting_info_container.meeting_time = Label();
-        self.meeting_info_container.meeting_time.text = f"Meeting Time: {meeting_info['meeting_time']}";
-        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_time);
+        # self.meeting_info_container.meeting_date = Label();
+        # self.meeting_info_container.meeting_date.text = "Meeting Date: temp date";
+        # self.meeting_info_container.add_widget(self.meeting_info_container.meeting_date);
+        # self.meeting_info_container.meeting_time = Label();
+        # self.meeting_info_container.meeting_time.text = f"Meeting Time: {meeting_info['meeting_time']}";
+        # self.meeting_info_container.add_widget(self.meeting_info_container.meeting_time);
 
-        self.meeting_info_container.accept_button = Button(text = "Accept");
-        self.meeting_info_container.add_widget(self.meeting_info_container.accept_button);
-        self.meeting_info_container.reject_button = Button(text = "Reject");
-        self.meeting_info_container.add_widget(self.meeting_info_container.reject_button);
+        # self.meeting_info_container.accept_button = Button(text = "Accept");
+        # self.meeting_info_container.add_widget(self.meeting_info_container.accept_button);
+        # self.meeting_info_container.reject_button = Button(text = "Reject");
+        # self.meeting_info_container.add_widget(self.meeting_info_container.reject_button);
 
         #then assign the container to self.content
         self.content = self.meeting_info_container;
