@@ -102,14 +102,6 @@ class ConfirmRequestPopup(Popup):
         self.meeting_info_container.reject_button = Button(text = "Reject");
         self.meeting_info_container.add_widget(self.meeting_info_container.reject_button);
 
-        #meeting instigator
-        self.meeting_info_container.second_addr_label = Label();
-        self.meeting_info_container.second_addr_label.text = "Starting Address:";
-        self.meeting_info_container.add_widget(self.meeting_info_container.second_addr_label);
-
-        self.meeting_info_container.second_addr = TextInput();
-        self.meeting_info_container.add_widget(self.meeting_info_container.second_addr);
-
         #then assign the container to self.content
         self.content = self.meeting_info_container;
 
