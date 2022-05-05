@@ -417,17 +417,24 @@ Manager:
         #     lon: -97.146090
         #     zoom: 10
         BoxLayout:
-            Label:
-                text: "Send Invite To?"
-                size_hint: (1, .1)
+            GridLayout:
+                cols: 2
                 canvas.before:
                     Color:
                         rgba: utils.get_color_from_hex(dark_peach)
                     Rectangle:
                         size: self.size
                         pos: self.pos
-            TextInput:
-                id: invited_user
+                Label:
+                    text: "Starting Address"
+                    size_hint: (1, .1)
+                TextInput:
+                    id: starting_address
+                Label:
+                    text: "Send Invite To?"
+                    size_hint: (1, .1)
+                TextInput:
+                    id: invited_user
             Label:
                 text: "Meeting Date and Time"
                 size_hint: (1, .1)

@@ -7,6 +7,7 @@ from kivy.uix.button import Button;
 from kivy.uix.boxlayout import BoxLayout;
 from kivy.properties import NumericProperty, ReferenceListProperty;
 from kivy.uix.popup import Popup;
+from kivy.uix.textinput import TextInput;
 
 from kivymd.uix.card import MDCard;
 
@@ -76,12 +77,12 @@ class ConfirmRequestPopup(Popup):
         #populate that here to widgets
         self.meeting_info_container = BoxLayout();
 
-        #meeting map
-        self.meeting_info_container.meeting_loc_map = MapView();
-        self.meeting_info_container.meeting_loc_map.lat = 30.273300;
-        self.meeting_info_container.meeting_loc_map.lon = -98.789063;
-        self.meeting_info_container.meeting_loc_map.zoom = 17;
-        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_loc_map);
+        # #meeting map
+        # self.meeting_info_container.meeting_loc_map = MapView();
+        # self.meeting_info_container.meeting_loc_map.lat = 30.273300;
+        # self.meeting_info_container.meeting_loc_map.lon = -98.789063;
+        # self.meeting_info_container.meeting_loc_map.zoom = 17;
+        # self.meeting_info_container.add_widget(self.meeting_info_container.meeting_loc_map);
 
         #meeting instigator
         self.meeting_info_container.meeting_instigator = Label();
@@ -100,6 +101,15 @@ class ConfirmRequestPopup(Popup):
         self.meeting_info_container.add_widget(self.meeting_info_container.accept_button);
         self.meeting_info_container.reject_button = Button(text = "Reject");
         self.meeting_info_container.add_widget(self.meeting_info_container.reject_button);
+
+        #meeting instigator
+        self.meeting_info_container.second_addr_label = Label();
+        self.meeting_info_container.second_addr_label.text = "Starting Address:";
+        self.meeting_info_container.add_widget(self.meeting_info_container.second_addr_label);
+
+        self.meeting_info_container.second_addr = TextInput();
+        self.meeting_info_container.add_widget(self.meeting_info_container.second_addr);
+
         #then assign the container to self.content
         self.content = self.meeting_info_container;
 
@@ -137,7 +147,7 @@ class RequestLayout(ScrollView):
         for meeting in meetings_list:
             if meeting['meeting_status'] == "PENDING":
                 self.create_meeting_band(meeting, len(self. ain_view.band_list))
-    
+
 
 class RequestBandContainer(BoxLayout):
     pass;
@@ -153,5 +163,3 @@ class RequestInstigator(Label):
     pass;
 class RequestDate(Label):
     pass;
-
-
