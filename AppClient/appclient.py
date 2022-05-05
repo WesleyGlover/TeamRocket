@@ -1,4 +1,5 @@
 from operator import truediv
+import hashlib
 import kivy.utils as utils;
 #from kivy.app import App;
 from kivy.lang import Builder;
@@ -139,7 +140,7 @@ class MITMClient(protocol.Protocol):
             app.meetings = msg['meetings']
             app.root.get_screen("home").ids.upcoming_meetings.update_meetings(app.meetings)
             app.root.get_screen("calendar").ids.meeting_requests.update_requests(app.meetings)
-            
+
             return
 
         if msg['command'] == 'receive_meeting_invite':
@@ -200,6 +201,9 @@ class LoginScreen(Screen):
         valid_email = input_validation.validate_email_address(user)
         valid_username = input_validation.validate_username(user)
         valid_password = input_validation.validate_password(password)
+        encoded = password.encode()
+        password = hashlib.sha256(encoded)
+        password = password.hexdigest()
 
         successful = False
         message = {'command': 'login'}
@@ -260,8 +264,11 @@ class RegisterScreen(Screen):
             self.error_message("Password does not meet security requirements")
             return
 
+        encoded = password.encode()
+        password = hashlib.sha256(encoded)
+        password = password.hexdigest()
 
-        message = {'command': 'register', 'name': name, 'email': email, 'username': username, 'password': password }
+        message = {'command': 'register', 'name': name, 'email': email, 'username': username, 'password': password}
         self.app.send_message(message)
         return
 
