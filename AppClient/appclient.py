@@ -1,4 +1,5 @@
 from operator import truediv
+import hashlib
 import kivy.utils as utils;
 #from kivy.app import App;
 from kivy.lang import Builder;
@@ -138,7 +139,8 @@ class MITMClient(protocol.Protocol):
 
             app.meetings = msg['meetings']
             app.root.get_screen("home").ids.upcoming_meetings.update_meetings(app.meetings)
-            #app.root.get_screen("calendar")
+            app.root.get_screen("calendar").ids.meeting_requests.update_requests(app.meetings)
+
             return
 
         if msg['command'] == 'receive_meeting_invite':
@@ -199,6 +201,9 @@ class LoginScreen(Screen):
         valid_email = input_validation.validate_email_address(user)
         valid_username = input_validation.validate_username(user)
         valid_password = input_validation.validate_password(password)
+        encoded = password.encode()
+        password = hashlib.sha256(encoded)
+        password = password.hexdigest()
 
         successful = False
         message = {'command': 'login'}
@@ -259,8 +264,11 @@ class RegisterScreen(Screen):
             self.error_message("Password does not meet security requirements")
             return
 
+        encoded = password.encode()
+        password = hashlib.sha256(encoded)
+        password = password.hexdigest()
 
-        message = {'command': 'register', 'name': name, 'email': email, 'username': username, 'password': password }
+        message = {'command': 'register', 'name': name, 'email': email, 'username': username, 'password': password}
         self.app.send_message(message)
         return
 
@@ -307,8 +315,10 @@ class CreateMeetingScreen(Screen):
         message = {}
         message["command"] = "create_meeting"
         message["meeting_instigator"] = self.app.user_info["username"]
-        message["meeting_partner"] = "user2"
-        message["instigator_location"] = "123 Sesame Street"
+        message["meeting_partner"] = self.ids.invited_user.text
+        lat = app.root.get_screen("home").get_user_lat()
+        lon = app.root.get_screen("home").get_user_lon()
+        message["instigator_location"] = str(lat) + "," + str(lon)
         message["date"] = "6/1/2022"
         message["time"] = "12:00"
 
@@ -320,11 +330,10 @@ class SettingsScreen(Screen):
 class RequestsPopup(Popup):
     pass;
 
-class CalenderScreen(Screen):
+class CalendarScreen(Screen):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs);
-
-        self.request_popup = RequestsPopup();
+        super().__init__(**kwargs)
+        self.request_popup = RequestsPopup()
 
 
 #Gonna make this a pop-upbox in the RequestLayout
