@@ -41,7 +41,7 @@ class MITMServerApp(App):
     textbox = None
 
     #Connecting to db. Cursor is used to query the db. connection is for commiting a edit to the db
-    def database_auth(self):
+    def database_auth():
             try:
                 connection = mysql.connector.connect(
                     user='doadmin',
@@ -59,11 +59,13 @@ class MITMServerApp(App):
                 print(str(e))
     # Databse Connection vars. connectionarray holds variables to query and modify db
 
+    connectorarr = database_auth()
+    cursor = connectorarr[0]
+    connection = connectorarr[1]
 
     # Initializing the server
     def build(self):
         root = self.setup_gui()
-        self.cursor, self.connection = self.database_auth()
         self.listen_for_client()
         return root
 
@@ -117,11 +119,6 @@ class MITMServerApp(App):
         if msg['command'] == 'ping_meetings':
             self.print_message("Ping Update")
             response = self.ping_update(msg)
-
-        # Checking for updating meetings
-        if msg['command'] == 'update_meeting':
-            self.print_message("Updating a meeting")
-            response = self.update_meeting(msg)
 
 
         self.label.text += "responded: {}\n".format(response)
@@ -251,23 +248,23 @@ class MITMServerApp(App):
         # 7: user1_Addr
         # 8: User2_Addr
         # 9: meeting_status
-        keys = ['meeting_id',
-                'meeting_instigator',
-                'meeting_partner',
+        keys = ['meeting_id', 
+                'meeting_instigator', 
+                'meeting_partner', 
                 'meeting_time',
                 'location_ID',
-                'mp_lon',
+                'mp_lon', 
                 'mp_lat',
                 'meeting_instigator_addr',
                 'meeting_partner_addr',
                 'meeting_status']
 
-        keys_for_user = ['meeting_id',
-                'meeting_instigator',
-                'meeting_partner',
+        keys_for_user = ['meeting_id', 
+                'meeting_instigator', 
+                'meeting_partner', 
                 'meeting_time',
                 'location_ID',
-                'mp_lon',
+                'mp_lon', 
                 'mp_lat',
                 'meeting_status']
 
@@ -286,20 +283,6 @@ class MITMServerApp(App):
 
         # Returning the meetings to the client
         return response
-
-    # Function to update the meeting in the SQL database
-    def update_meeting(self, msg):
-        # This is used for accepting/rejecting a meeting.
-        self.print_message(f"Updating Meeting: {msg['meeting']['meeting_id']} to {msg['meeting']['meeting_status']}")
-
-        # Creating the SQL Command
-        sql = 'UPDATE Meeting SET meeting_status = (%s) WHERE MeetingID = (%s)'
-        val = (msg['meeting']['meeting_status'], msg['meeting']['meeting_id'])
-        self.cursor.execute(sql, val)
-        self.connection.commit()
-
-        return "Sucessful"
-
 
 
 

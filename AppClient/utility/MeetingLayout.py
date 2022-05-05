@@ -111,8 +111,8 @@ class MeetingLayout(ScrollView):
         self.main_view.clear_widgets()
 
         for meeting in meetings_list:
-            if meeting['meeting_status'] == "ACCEPTED":
-                self.create_meeting_band(meeting, len(self. main_view.band_list))
+            if meeting['meeting_status'] == "APPROVED":
+                self.create_meeting_band(meeting, len(self. ain_view.band_list))
 
 
 

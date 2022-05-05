@@ -36,7 +36,7 @@ Manager:
     # MeetingInfoScreen:
     CreateMeetingScreen:
     SettingsScreen:
-    CalendarScreen:
+    CalenderScreen:
     # ConfirmRequestScreen:
     ExploreScreen:
 
@@ -72,7 +72,7 @@ Manager:
     padding: (0, 20)
 
 
-#defaults for the stupid calendar
+#defaults for the stupid calender
 <MonthYearLabel>
     color: utils.get_color_from_hex(soft_black)
     font_size: 30
@@ -365,7 +365,7 @@ Manager:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint: (.1, .1)
 
-                on_press: app.root.current = "calendar"
+                on_press: app.root.current = "calender"
             Button:
                 text: "E"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -417,17 +417,24 @@ Manager:
         #     lon: -97.146090
         #     zoom: 10
         BoxLayout:
-            Label:
-                text: "Send Invite To?"
-                size_hint: (1, .1)
+            GridLayout:
+                cols: 2
                 canvas.before:
                     Color:
                         rgba: utils.get_color_from_hex(dark_peach)
                     Rectangle:
                         size: self.size
                         pos: self.pos
-            TextInput:
-                id: invited_user
+                # Label:
+                #     text: "Starting Address"
+                #     size_hint: (1, .1)
+                # TextInput:
+                #     id: starting_address
+                Label:
+                    text: "Send Invite To?"
+                    size_hint: (1, .1)
+                TextInput:
+                    id: invited_user
             Label:
                 text: "Meeting Date and Time"
                 size_hint: (1, .1)
@@ -529,8 +536,8 @@ Manager:
             Label:
                 size_hint: (.2, 1)
         BoxLayout:
-<CalendarScreen>
-    name: "calendar"
+<CalenderScreen>
+    name: "calender"
 
     GridLayout:
         cols: 1
@@ -542,7 +549,7 @@ Manager:
             Label:
                 size_hint: (.2, 1)
             Label:
-                text: "Calendar"
+                text: "Calender"
                 font_size: 40
                 color: utils.get_color_from_hex(soft_black)
             Button:
@@ -557,7 +564,7 @@ Manager:
             Label:
                 text: "Meetings On Selected Day"
                 size_hint: (1, .1)
-            RequestLayout: #going to make a CalMeetingLayout I think
+            CalMeetingLayout: #going to make a CalMeetingLayout I think
                 id: meeting_requests
                 app: app
                 size_hint: (1, .9)
@@ -671,7 +678,7 @@ Manager:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint: (.1, .1)
 
-                on_press: app.root.current = "calendar"
+                on_press: app.root.current = "calender"
             Button:
                 text: "E"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
