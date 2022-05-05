@@ -289,11 +289,22 @@ class MITMServerApp(App):
 
     # Function to update the meeting in the SQL database
     def update_meeting(self, msg):
+        user1Coords = []
+        user2Coords = []
         # This is used for accepting/rejecting a meeting.
         self.print_message(f"Updating Meeting: {msg['meeting']['meeting_id']} to {msg['meeting']['meeting_status']} Location2: {msg['meeting']['user2_Addr']}")
-        # Creating the SQL Command
-        sql = 'UPDATE Meeting SET meeting_Status = (%s), user2_Addr = (%s) WHERE MeetingID = (%s)'
-        val = (msg['meeting']['meeting_status'], msg['meeting']['user2_Addr'], msg['meeting']['meeting_id'])
+        id = msg['meeting']['meeting_id']
+        self.cursor.execute(f'SELECT * FROM Meeting WHERE MeetingID = {id}')
+        tempmeeting = self.cursor.fetchall()
+        user1CoordsTemp = tempmeeting[0][7]
+        user1Coords = user1CoordsTemp.split(",")
+        user2CoordsTemp = msg['meeting']['user2_Addr']
+        user2Coords = user2CoordsTemp.split(",")
+        midCoords = self.findMidPoint(float(user1Coords[0]), float(user1Coords[1]), float(user2Coords[0]), float(user2Coords[1]))
+        midLat = midCoords['lat']
+        midLon = midCoords['lon']
+        sql = 'UPDATE Meeting SET meeting_Status = (%s), user2_Addr = (%s), mp_lon = (%s), mp_lat = (%s) WHERE MeetingID = (%s)'
+        val = (msg['meeting']['meeting_status'], msg['meeting']['user2_Addr'], midLon, midLat, msg['meeting']['meeting_id'])
         self.cursor.execute(sql, val)
         self.connection.commit()
 
