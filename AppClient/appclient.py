@@ -138,7 +138,7 @@ class MITMClient(protocol.Protocol):
 
             app.meetings = msg['meetings']
             app.root.get_screen("home").ids.upcoming_meetings.update_meetings(app.meetings)
-            #app.root.get_screen("calendar")
+            app.root.get_screen("calendar").request_popup.ids.request_meetings.update_requests(app.meetings)
             return
 
         if msg['command'] == 'receive_meeting_invite':

@@ -41,7 +41,7 @@ class MITMServerApp(App):
     textbox = None
 
     #Connecting to db. Cursor is used to query the db. connection is for commiting a edit to the db
-    def database_auth():
+    def database_auth(self):
             try:
                 connection = mysql.connector.connect(
                     user='doadmin',
@@ -59,13 +59,11 @@ class MITMServerApp(App):
                 print(str(e))
     # Databse Connection vars. connectionarray holds variables to query and modify db
 
-    connectorarr = database_auth()
-    cursor = connectorarr[0]
-    connection = connectorarr[1]
 
     # Initializing the server
     def build(self):
         root = self.setup_gui()
+        self.cursor, self.connection = self.database_auth()
         self.listen_for_client()
         return root
 
