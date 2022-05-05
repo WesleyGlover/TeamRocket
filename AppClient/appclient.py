@@ -316,7 +316,9 @@ class CreateMeetingScreen(Screen):
         message["command"] = "create_meeting"
         message["meeting_instigator"] = self.app.user_info["username"]
         message["meeting_partner"] = self.ids.invited_user.text
-        message["instigator_location"] = "123 Sesame Street"
+        lat = app.root.get_screen("home").get_user_lat()
+        lon = app.root.get_screen("home").get_user_lon()
+        message["instigator_location"] = str(lat) + "," + str(lon)
         message["date"] = "6/1/2022"
         message["time"] = "12:00"
 

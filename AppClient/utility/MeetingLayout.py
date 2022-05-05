@@ -60,7 +60,11 @@ Builder.load_string("""
     id: meeting_date
     pos_hint: {"center_y": .5}
     color: utils.get_color_from_hex(soft_black)
-
+<MeetingLocation>:
+    id: meeting_location
+    pos_hint: {"center_y": .5}
+    color: utils.get_color_from_hex(off_white)
+    multiline: True
 <MeetingInfoPopup>
     size_hint: (.8, .8)
     pos_hint: {'center_x': .5, 'center_y': .5}
@@ -75,7 +79,7 @@ class MeetingInfoPopup(Popup):
 
         #query for the meeting info from the server
         #populate that here to widgets
-
+        self.add_widget(MeetingLocation(text = meeting_id['location_ID']))
         #add each widget to a container widget
         #then assign the container to self.content
 
@@ -100,10 +104,10 @@ class MeetingLayout(ScrollView):
         user_to_show = data_instance['meeting_partner'] if self.app.user_info['username'] == data_instance['meeting_instigator'] else data_instance['meeting_instigator']
 
         self.main_view.band_list.append(MeetingBand(orientation = "horizontal"));
-        self.main_view.band_list[position].meeting_id = data_instance['meeting_id'];
+        self.main_view.band_list[position].meeting_id = data_instance;
         self.main_view.band_list[position].add_widget(MeetingPartner(text = user_to_show));
-        self.main_view.band_list[position].add_widget(MeetingDate(text = data_instance['meeting_time']));
-        self.main_view.band_list[position].add_widget(MeetingLocation(text = data_instance['location_ID']));
+        self.main_view.band_list[position].add_widget(MeetingDate(text = data_instance['meeting_date']));
+        #self.main_view.band_list[position].add_widget(MeetingLocation(text = data_instance['location_ID']));
 
         self.main_view.add_widget(self.main_view.band_list[position]);
 
