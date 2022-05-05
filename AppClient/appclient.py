@@ -308,7 +308,7 @@ class CreateMeetingScreen(Screen):
         message = {}
         message["command"] = "create_meeting"
         message["meeting_instigator"] = self.app.user_info["username"]
-        message["meeting_partner"] = "user2"
+        message["meeting_partner"] = self.ids.invited_user.text
         message["instigator_location"] = "123 Sesame Street"
         message["date"] = "6/1/2022"
         message["time"] = "12:00"
