@@ -290,11 +290,10 @@ class MITMServerApp(App):
     # Function to update the meeting in the SQL database
     def update_meeting(self, msg):
         # This is used for accepting/rejecting a meeting.
-        self.print_message(f"Updating Meeting: {msg['meeting']['meeting_id']} to {msg['meeting']['meeting_status']}")
-
+        self.print_message(f"Updating Meeting: {msg['meeting']['meeting_id']} to {msg['meeting']['meeting_status']} Location2: {msg['meeting']['user2_Addr']}")
         # Creating the SQL Command
-        sql = 'UPDATE Meeting SET meeting_status = (%s) WHERE MeetingID = (%s)'
-        val = (msg['meeting']['meeting_status'], msg['meeting']['meeting_id'])
+        sql = 'UPDATE Meeting SET meeting_Status = (%s), user2_Addr = (%s) WHERE MeetingID = (%s)'
+        val = (msg['meeting']['meeting_status'], msg['meeting']['user2_Addr'], msg['meeting']['meeting_id'])
         self.cursor.execute(sql, val)
         self.connection.commit()
 
