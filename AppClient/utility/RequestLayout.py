@@ -13,6 +13,9 @@ from kivymd.uix.card import MDCard;
 
 from kivy.garden.mapview import MapView;
 
+from geopy.geocoders import Nominatim
+import geocoder
+
 Builder.load_string("""
 #:import utils kivy.utils
 
@@ -110,6 +113,9 @@ class ConfirmRequestPopup(Popup):
         updated_info['meeting_status'] = "ACCEPTED"
 
         message = {'command': 'update_meeting', 'meeting': updated_info}
+        lat = geocoder.ip('me').geojson['features'][0]['properties']['lat']
+        lon = geocoder.ip('me').geojson['features'][0]['properties']['lng']
+        message['meeting']["user2_Addr"] = str(lat) + "," + str(lon)
         self.app.send_message(message)
         pass
 
@@ -154,7 +160,7 @@ class RequestLayout(ScrollView):
 
         for meeting in meetings_list:
             if meeting['meeting_status'] == "PENDING":
-                self.create_meeting_band(meeting, len(self. ain_view.band_list))
+                self.create_request_band(meeting, len(self.main_view.band_list))
 
 
 class RequestBandContainer(BoxLayout):
