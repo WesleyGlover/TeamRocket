@@ -7,7 +7,6 @@ from kivy.uix.button import Button;
 from kivy.uix.boxlayout import BoxLayout;
 from kivy.properties import NumericProperty, ReferenceListProperty;
 from kivy.uix.popup import Popup;
-from kivy.uix.textinput import TextInput;
 
 from kivymd.uix.card import MDCard;
 
@@ -68,6 +67,7 @@ Builder.load_string("""
 <ConfirmRequestPopup>
     size_hint: (.8, .8)
     pos_hint: {'center_x': .5, 'center_y': .5}
+    app: app
 """)
 
 class ConfirmRequestPopup(Popup):
@@ -80,12 +80,12 @@ class ConfirmRequestPopup(Popup):
         #populate that here to widgets
         self.meeting_info_container = BoxLayout();
 
-        # #meeting map
-        # self.meeting_info_container.meeting_loc_map = MapView();
-        # self.meeting_info_container.meeting_loc_map.lat = 30.273300;
-        # self.meeting_info_container.meeting_loc_map.lon = -98.789063;
-        # self.meeting_info_container.meeting_loc_map.zoom = 17;
-        # self.meeting_info_container.add_widget(self.meeting_info_container.meeting_loc_map);
+        #meeting map
+        self.meeting_info_container.meeting_loc_map = MapView();
+        self.meeting_info_container.meeting_loc_map.lat = 30.273300;
+        self.meeting_info_container.meeting_loc_map.lon = -98.789063;
+        self.meeting_info_container.meeting_loc_map.zoom = 17;
+        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_loc_map);
 
         #meeting instigator
         self.meeting_info_container.meeting_instigator = Label();
@@ -101,10 +101,11 @@ class ConfirmRequestPopup(Popup):
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_time);
 
         self.meeting_info_container.accept_button = Button(text = "Accept");
+        self.meeting_info_container.accept_button.bind(on_press=self.accept_button_onclick)
         self.meeting_info_container.add_widget(self.meeting_info_container.accept_button);
         self.meeting_info_container.reject_button = Button(text = "Reject");
+        self.meeting_info_container.reject_button.bind(on_press=self.reject_button_onclick)
         self.meeting_info_container.add_widget(self.meeting_info_container.reject_button);
-
         #then assign the container to self.content
         self.content = self.meeting_info_container;
 
@@ -150,16 +151,18 @@ class RequestLayout(ScrollView):
         self.main_view.band_list.append(RequestBand(orientation = "horizontal"));
         self.main_view.band_list[position].meeting_info = data_instance;
         self.main_view.band_list[position].add_widget(RequestInstigator(text = data_instance['meeting_instigator']));
-        self.main_view.band_list[position].add_widget(RequestDate(text = "date"));
+        self.main_view.band_list[position].add_widget(RequestDate(text = data_instance['meeting_date']));
+
 
         self.main_view.add_widget(self.main_view.band_list[position]);
 
     def update_requests(self, meetings_list):
+        print("here2")
         self.main_view.band_list.clear()
         self.main_view.clear_widgets()
 
         for meeting in meetings_list:
-            if meeting['meeting_status'] == "PENDING":
+            if meeting['meeting_status'] == "PENDING" and meeting['meeting_instigator']!= self.app.user_info['username']:
                 self.create_request_band(meeting, len(self.main_view.band_list))
 
 

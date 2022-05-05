@@ -41,7 +41,7 @@ class MITMServerApp(App):
     textbox = None
 
     #Connecting to db. Cursor is used to query the db. connection is for commiting a edit to the db
-    def database_auth():
+    def database_auth(self):
             try:
                 connection = mysql.connector.connect(
                     user='doadmin',
@@ -59,13 +59,11 @@ class MITMServerApp(App):
                 print(str(e))
     # Databse Connection vars. connectionarray holds variables to query and modify db
 
-    connectorarr = database_auth()
-    cursor = connectorarr[0]
-    connection = connectorarr[1]
 
     # Initializing the server
     def build(self):
         root = self.setup_gui()
+        self.cursor, self.connection = self.database_auth()
         self.listen_for_client()
         return root
 
@@ -119,6 +117,11 @@ class MITMServerApp(App):
         if msg['command'] == 'ping_meetings':
             self.print_message("Ping Update")
             response = self.ping_update(msg)
+
+        # Checking for updating meetings
+        if msg['command'] == 'update_meeting':
+            self.print_message("Updating a meeting")
+            response = self.update_meeting(msg)
 
 
         self.label.text += "responded: {}\n".format(response)
@@ -179,8 +182,8 @@ class MITMServerApp(App):
             newMeetingID = random.randint(10000,99999)
         self.meetingIDList.append(newMeetingID)
         #{"command": "create_meeting", "meeting_instigator": "kalvin", "meeting_partner": Wesley, "instigator_location": "123, Sesame Street", "date": "1/5/2019", "time": "17:15"}//
-        sql = "INSERT INTO defaultdb.Meeting (MeetingID, User1, User2, MeetingTime, LocationID, mp_lon, mp_lat, user1_Addr, user2_Addr, meeting_Status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        val = (newMeetingID, msg['meeting_instigator'], msg['meeting_partner'], msg['time'], '0', '1.1', '1.1', msg['instigator_location'], 'PENDING', 'PENDING')
+        sql = "INSERT INTO defaultdb.Meeting (MeetingID, User1, User2, MeetingTime, LocationID, mp_lon, mp_lat, user1_Addr, user2_Addr, meeting_Status, Date) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)"
+        val = (newMeetingID, msg['meeting_instigator'], msg['meeting_partner'], msg['time'], '0', '1.1', '1.1', msg['instigator_location'], 'PENDING', 'PENDING', msg['date'])
         self.cursor.execute(sql,val)
         self.connection.commit()
 
@@ -248,25 +251,28 @@ class MITMServerApp(App):
         # 7: user1_Addr
         # 8: User2_Addr
         # 9: meeting_status
-        keys = ['meeting_id', 
-                'meeting_instigator', 
-                'meeting_partner', 
+        #10: meeting date
+        keys = ['meeting_id',
+                'meeting_instigator',
+                'meeting_partner',
                 'meeting_time',
                 'location_ID',
-                'mp_lon', 
+                'mp_lon',
                 'mp_lat',
                 'meeting_instigator_addr',
                 'meeting_partner_addr',
-                'meeting_status']
+                'meeting_status',
+                'meeting_date']
 
-        keys_for_user = ['meeting_id', 
-                'meeting_instigator', 
-                'meeting_partner', 
+        keys_for_user = ['meeting_id',
+                'meeting_instigator',
+                'meeting_partner',
                 'meeting_time',
                 'location_ID',
-                'mp_lon', 
+                'mp_lon',
                 'mp_lat',
-                'meeting_status']
+                'meeting_status',
+                'meeting_date']
 
         response_meetings = []
 

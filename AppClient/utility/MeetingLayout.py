@@ -103,6 +103,7 @@ class MeetingLayout(ScrollView):
         self.main_view.band_list[position].meeting_id = data_instance['meeting_id'];
         self.main_view.band_list[position].add_widget(MeetingPartner(text = user_to_show));
         self.main_view.band_list[position].add_widget(MeetingDate(text = data_instance['meeting_time']));
+        self.main_view.band_list[position].add_widget(MeetingLocation(text = data_instance['location_ID']));
 
         self.main_view.add_widget(self.main_view.band_list[position]);
 
@@ -111,8 +112,8 @@ class MeetingLayout(ScrollView):
         self.main_view.clear_widgets()
 
         for meeting in meetings_list:
-            if meeting['meeting_status'] == "APPROVED":
-                self.create_meeting_band(meeting, len(self. ain_view.band_list))
+            if meeting['meeting_status'] == "ACCEPTED":
+                self.create_meeting_band(meeting, len(self. main_view.band_list))
 
 
 
@@ -131,6 +132,8 @@ class MeetingName(Label):
 class MeetingPartner(Label):
     pass;
 class MeetingDate(Label):
+    pass;
+class MeetingLocation(Label):
     pass;
 
 
