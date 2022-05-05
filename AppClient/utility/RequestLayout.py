@@ -64,6 +64,7 @@ Builder.load_string("""
 <ConfirmRequestPopup>
     size_hint: (.8, .8)
     pos_hint: {'center_x': .5, 'center_y': .5}
+    app: app
 """)
 
 class ConfirmRequestPopup(Popup):
@@ -97,11 +98,29 @@ class ConfirmRequestPopup(Popup):
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_time);
 
         self.meeting_info_container.accept_button = Button(text = "Accept");
+        self.meeting_info_container.accept_button.bind(on_press=self.accept_button_onclick)
         self.meeting_info_container.add_widget(self.meeting_info_container.accept_button);
         self.meeting_info_container.reject_button = Button(text = "Reject");
+        self.meeting_info_container.reject_button.bind(on_press=self.reject_button_onclick)
         self.meeting_info_container.add_widget(self.meeting_info_container.reject_button);
         #then assign the container to self.content
         self.content = self.meeting_info_container;
+
+    def accept_button_onclick(self, trash):
+        updated_info = self.meeting_info.copy()
+        updated_info['meeting_status'] = "ACCEPTED"
+
+        message = {'command': 'update_meeting', 'meeting': updated_info}
+        self.app.send_message(message)
+        pass
+
+    def reject_button_onclick(self, trash):
+        updated_info = self.meeting_info.copy()
+        updated_info['meeting_status'] = "REJECTED"
+
+        message = {'command': 'update_meeting', 'meeting': updated_info}
+        self.app.send_message(message)
+        pass
 
 class RequestLayout(ScrollView):
     def __init__(self, *args, **kwargs):
@@ -131,12 +150,13 @@ class RequestLayout(ScrollView):
         self.main_view.add_widget(self.main_view.band_list[position]);
 
     def update_requests(self, meetings_list):
+        print("here2")
         self.main_view.band_list.clear()
         self.main_view.clear_widgets()
 
         for meeting in meetings_list:
             if meeting['meeting_status'] == "PENDING":
-                self.create_meeting_band(meeting, len(self. ain_view.band_list))
+                self.create_request_band(meeting, len(self.main_view.band_list))
     
 
 class RequestBandContainer(BoxLayout):
