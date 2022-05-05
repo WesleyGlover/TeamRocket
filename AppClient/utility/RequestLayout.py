@@ -80,13 +80,6 @@ class ConfirmRequestPopup(Popup):
         #populate that here to widgets
         self.meeting_info_container = BoxLayout();
 
-        #meeting map
-        self.meeting_info_container.meeting_loc_map = MapView();
-        self.meeting_info_container.meeting_loc_map.lat = 30.273300;
-        self.meeting_info_container.meeting_loc_map.lon = -98.789063;
-        self.meeting_info_container.meeting_loc_map.zoom = 17;
-        self.meeting_info_container.add_widget(self.meeting_info_container.meeting_loc_map);
-
         #meeting instigator
         self.meeting_info_container.meeting_instigator = Label();
         self.meeting_info_container.meeting_instigator.text = f"Meeting Instigater: {meeting_info['meeting_instigator']}";
@@ -180,5 +173,3 @@ class RequestInstigator(Label):
     pass;
 class RequestDate(Label):
     pass;
-
-
