@@ -106,21 +106,21 @@ class ConfirmRequestPopup(Popup):
         #then assign the container to self.content
         self.content = self.meeting_info_container;
 
-    def accept_button_onclick(self, trash):
-        updated_info = self.meeting_info.copy()
-        updated_info['meeting_status'] = "ACCEPTED"
+    # def accept_button_onclick(self, trash):
+    #     updated_info = self.meeting_info.copy()
+    #     updated_info['meeting_status'] = "ACCEPTED"
 
-        message = {'command': 'update_meeting', 'meeting': updated_info}
-        self.app.send_message(message)
-        pass
+    #     message = {'command': 'update_meeting', 'meeting': updated_info}
+    #     self.app.send_message(message)
+    #     pass
 
-    def reject_button_onclick(self, trash):
-        updated_info = self.meeting_info.copy()
-        updated_info['meeting_status'] = "REJECTED"
+    # def reject_button_onclick(self, trash):
+    #     updated_info = self.meeting_info.copy()
+    #     updated_info['meeting_status'] = "REJECTED"
 
-        message = {'command': 'update_meeting', 'meeting': updated_info}
-        self.app.send_message(message)
-        pass
+    #     message = {'command': 'update_meeting', 'meeting': updated_info}
+    #     self.app.send_message(message)
+    #     pass
 
 class RequestLayout(ScrollView):
     def __init__(self, *args, **kwargs):
