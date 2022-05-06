@@ -96,12 +96,12 @@ class MeetingInfoPopup(Popup):
         self.meeting_info_container.meeting_date = Label();
         self.meeting_info_container.meeting_date.text = "Meeting Date: temp date";
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_date);
-        self.meeting_info_container.meeting_time = Label(size_hint_y = None, text_size= (self.width, None), height = self.texture_size[1]);
+        self.meeting_info_container.meeting_time = Label();
         self.meeting_info_container.meeting_time.text = f"Meeting Time: {meeting_id['meeting_time']}";
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_time);
 
         #meeting instigator
-        self.meeting_info_container.meeting_location = Label();
+        self.meeting_info_container.meeting_location = Label(text_size= (self.width, None));
         self.meeting_info_container.meeting_location.text = f"Meeting Address: {meeting_id['location_ID']}";
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_location);
 
