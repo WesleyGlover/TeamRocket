@@ -4,7 +4,7 @@ from kivy.uix.label import Label;
 from kivy.uix.boxlayout import BoxLayout;
 from kivy.properties import NumericProperty, ReferenceListProperty;
 from kivy.uix.popup import Popup;
-
+from kivy.garden.mapview import MapView;
 from kivymd.uix.card import MDCard;
 
 Builder.load_string("""
@@ -82,8 +82,8 @@ class MeetingInfoPopup(Popup):
         #populate that here to widgets
         #meeting map
         self.meeting_info_container.meeting_loc_map = MapView();
-        self.meeting_info_container.meeting_loc_map.lat = 30.273300;
-        self.meeting_info_container.meeting_loc_map.lon = -98.789063;
+        self.meeting_info_container.meeting_loc_map.lat = meeting_id['mp_lat'];
+        self.meeting_info_container.meeting_loc_map.lon = meeting_id['mp_lon'];
         self.meeting_info_container.meeting_loc_map.zoom = 17;
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_loc_map);
 
