@@ -309,7 +309,7 @@ class MITMServerApp(App):
 
         self.cursor.execute(f'SELECT * FROM Locations WHERE LocationLong < ({midLon + 0.1}) AND LocationLong > ({midLon - 0.1}) AND LocationLat < ({midLat + 0.1}) AND LocationLat > ({midLat - 0.1})')
         locList = self.cursor.fetchall()
-        if len(locList) is not 0:
+        if locList:
             ranLoc = random.randint(0, len(locList))
             meetingLoc = locList[ranLoc][1]
         else:
