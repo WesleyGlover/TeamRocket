@@ -306,11 +306,14 @@ class MITMServerApp(App):
         midCoords = self.findMidPoint(float(user1Coords[0]), float(user1Coords[1]), float(user2Coords[0]), float(user2Coords[1]))
         midLat = midCoords['lat']
         midLon = midCoords['lon']
-        
+
         self.cursor.execute(f'SELECT * FROM Locations WHERE LocationLong < ({midLon + 0.1}) AND LocationLong > ({midLon - 0.1}) AND LocationLat < ({midLat + 0.1}) AND LocationLat > ({midLat - 0.1})')
         locList = self.cursor.fetchall()
-        ranLoc = random.randint(0, len(locList))
-        meetingLoc = locList[ranLoc][1]
+        if len(locList) is not 0:
+            ranLoc = random.randint(0, len(locList))
+            meetingLoc = locList[ranLoc][1]
+        else:
+            meetingLoc = 'None in Range'
         sql = 'UPDATE Meeting SET meeting_Status = (%s), user2_Addr = (%s), mp_lon = (%s), mp_lat = (%s), LocationID = (%s) WHERE MeetingID = (%s)'
         val = (msg['meeting']['meeting_status'], msg['meeting']['user2_Addr'], midLon, midLat, meetingLoc, msg['meeting']['meeting_id'])
         self.cursor.execute(sql, val)
