@@ -4,7 +4,7 @@ from kivy.uix.label import Label;
 from kivy.uix.boxlayout import BoxLayout;
 from kivy.properties import NumericProperty, ReferenceListProperty;
 from kivy.uix.popup import Popup;
-
+from kivy.garden.mapview import MapView;
 from kivymd.uix.card import MDCard;
 
 Builder.load_string("""
@@ -60,7 +60,11 @@ Builder.load_string("""
     id: meeting_date
     pos_hint: {"center_y": .5}
     color: utils.get_color_from_hex(soft_black)
-
+<MeetingLocation>:
+    id: meeting_location
+    pos_hint: {"center_y": .5}
+    color: utils.get_color_from_hex(off_white)
+    multiline: True
 <MeetingInfoPopup>
     size_hint: (.8, .8)
     pos_hint: {'center_x': .5, 'center_y': .5}
@@ -78,14 +82,14 @@ class MeetingInfoPopup(Popup):
         #populate that here to widgets
         #meeting map
         self.meeting_info_container.meeting_loc_map = MapView();
-        self.meeting_info_container.meeting_loc_map.lat = 30.273300;
-        self.meeting_info_container.meeting_loc_map.lon = -98.789063;
+        self.meeting_info_container.meeting_loc_map.lat = meeting_id['mp_lat'];
+        self.meeting_info_container.meeting_loc_map.lon = meeting_id['mp_lon'];
         self.meeting_info_container.meeting_loc_map.zoom = 17;
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_loc_map);
 
         #meeting instigator
         self.meeting_info_container.meeting_participants = Label();
-        self.meeting_info_container.meeting_participants.text = f"Meeting Participants: {meeting_info['meeting_instigator']}";
+        self.meeting_info_container.meeting_participants.text = f"Meeting Participants: {meeting_id['meeting_instigator']}";
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_participants);
 
         #meeting datetime
@@ -93,12 +97,12 @@ class MeetingInfoPopup(Popup):
         self.meeting_info_container.meeting_date.text = "Meeting Date: temp date";
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_date);
         self.meeting_info_container.meeting_time = Label(size_hint_y = None, text_size= (self.width, None), height = self.texture_size[1]);
-        self.meeting_info_container.meeting_time.text = f"Meeting Time: {meeting_info['meeting_time']}";
+        self.meeting_info_container.meeting_time.text = f"Meeting Time: {meeting_id['meeting_time']}";
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_time);
 
         #meeting instigator
         self.meeting_info_container.meeting_location = Label();
-        self.meeting_info_container.meeting_location.text = f"Meeting Address: ";
+        self.meeting_info_container.meeting_location.text = f"Meeting Address: {meeting_id['location_ID']}";
         self.meeting_info_container.add_widget(self.meeting_info_container.meeting_location);
 
         self.content = self.meeting_info_container;
@@ -124,10 +128,10 @@ class MeetingLayout(ScrollView):
         user_to_show = data_instance['meeting_partner'] if self.app.user_info['username'] == data_instance['meeting_instigator'] else data_instance['meeting_instigator']
 
         self.main_view.band_list.append(MeetingBand(orientation = "horizontal"));
-        self.main_view.band_list[position].meeting_id = data_instance['meeting_id'];
+        self.main_view.band_list[position].meeting_id = data_instance;
         self.main_view.band_list[position].add_widget(MeetingPartner(text = user_to_show));
-        self.main_view.band_list[position].add_widget(MeetingDate(text = data_instance['meeting_time']));
-        self.main_view.band_list[position].add_widget(MeetingLocation(text = data_instance['location_ID']));
+        self.main_view.band_list[position].add_widget(MeetingDate(text = data_instance['meeting_date']));
+        #self.main_view.band_list[position].add_widget(MeetingLocation(text = data_instance['location_ID']));
 
         self.main_view.add_widget(self.main_view.band_list[position]);
 
