@@ -1,3 +1,7 @@
+'''
+Script is purely to digest csvs/ webscraping data into our databse
+csv->df->sqltable
+'''
 from ctypes import sizeof
 from re import M
 from token import AT
@@ -92,7 +96,7 @@ for i in range(12,14):
 
 
 try:
-
+    #Authentication
     connection = mysql.connector.connect(
         user='doadmin',
         password ='AVNS_WZEScW_Y5FNKr7m',
@@ -101,65 +105,31 @@ try:
         database='defaultdb'
     )
 
+    #cursor handles queries to the db
     cursor = connection.cursor()
-    #cursor.execute("Select * From Location")
-    #result = cursor.fetchall()
-    #print(result)
     
 except BaseException as e:
     print(str(e))
-count = 0
-geolocator = Nominatim(user_agent="MITM")
 
 
-for i in combAdd:
-        
+for i in combAdd: #i holds address in the combAdd list
+    
     #Acceptable address to latlon glendale, az, 5082 NW Grand Ave -> city, state, street address;
+    #Grab the city state and street address from the original string
     _state = re.match(r".*\/([a-zA-Z]*)\/.*", i)
     _streetAddr = re.match(r"([0-9a-zA-Z ]*).*",i)
     _city = re.match(r".*\/([a-zA-Z ]*)", i)
+
+    #Proper Address Format
     LocationAddr = str(_city[1]) + ', ' + str(_state[1]) + ', ' + str(_streetAddr[1])
-    addressLocationString = str(_streetAddr[1]) + ', ' + str(_city[1])
-    '''
-    failed = False
 
-    count+=1
-    LocationLat = None
-    LocationLong = None
-    try:
-        x = address_to_latlon(geolocator, LocationAddr)
-        LocationLat = x[0]
-        LocationLong = x[1]
-    except AttributeError as e:
-        print('None')
-        LocationLat = None
-        LocationLong = None
-
-    print(LocationLat, LocationLong)
-
-    
-    sqls = "INSERT INTO defaultdb.Locations(LocationName, LocationAddr, LocationLong, LocationLat) VALUES (%s, %s,%s,%s)"
-    '''
+    #Inserts LocationAddr into the table Locations
     sqls = "INSERT INTO defaultdb.Locations(LocationName, LocationAddr) VALUES (%s, %s)"
     val = ('qt', LocationAddr)
     
+    #Execute insert statement then commit it to the db
     cursor.execute(sqls,val)
     connection.commit()
     
-
-
-'''
-Dataframe example (Prob not needed)
-
-lst = []
-newlst = []
-x = 0
-for i in combAdd:
-    x+=1
-    lst = [x,i]
-    newlst.append(lst)
-    
-df = pd.DataFrame(newlst, columns=['LocationID','Location'])
-'''
 
     

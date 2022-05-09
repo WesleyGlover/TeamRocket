@@ -53,9 +53,10 @@ class MITMServerApp(App):
                 print('\n[+] Connected to db-mysql-teamrocket-do-user-11106141-0.b.db.ondigitalocean.com Successfully')
 
                 cursor = connection.cursor()
-
+                #Reutns cursor that handles sql quieries and connection that handles commits which follow a cursor.execute when modifying a table
                 return cursor, connection
             except BaseException as e:
+                #Print error message
                 print(str(e))
     # Databse Connection vars. connectionarray holds variables to query and modify db
 
@@ -136,11 +137,15 @@ class MITMServerApp(App):
         # Setting up json message to send back
         response = {'command': 'auth_login'}
 
+        #Creating query from the username and password sent in. If data is matching this query the username password combo exists
+        # change * to username either way no one will see the result but its safer to return 1 column
         self.cursor.execute("Select * From User where Username = '{}' and Password = '{}' ".format(msg['username'],msg['password']))
         result = self.cursor.fetchall()
         if(result == []):
+            #If empty response send login failed
             response['result'] = "fail"
         else:
+            #else send success
             response['result'] = "success"
             response['username'] = msg['username']
         return response
@@ -148,28 +153,38 @@ class MITMServerApp(App):
     # Defining the registration function
     def auth_regi(self, msg):
         response = {'command': 'auth_register'}
-        #TODO change * to username
+        
+
+        #if a username exists it will return data related to the query else it will return []
         self.cursor.execute(f"Select * From User where Username = \'{msg['username']}\'")
         result = self.cursor.fetchall()
         self.print_message(result)
+
+        #username DNE
         if(result != []):
+            #return username exists to client
             response['result'] = "username_exists"
             self.print_message(response)
             return response
 
+        #if a email exists it will return data related to the query else it will return []
         self.cursor.execute(f"Select * From User where Email = \'{msg['email']}\' ")
         result = self.cursor.fetchall()
         if(result != []):
+            #return email exists to client
             response['result'] = "email_exists"
             self.print_message(response)
             return response
 
-
+        #ONlY called if all if statements return false proving the username and email are new
+        # %s-> string values
         sql = 'INSERT INTO User (Name, Email, Password, Username) VALUES (%s,%s,%s,%s)'
         val = (msg['name'], msg['email'], msg['password'], msg['username'])
+        #Cursor executes our query then commits it using the connection object
         self.cursor.execute(sql,val)
         self.connection.commit()
 
+        #Return 
         response['result'] = "success"
         response['username'] = msg['username']
         return response
